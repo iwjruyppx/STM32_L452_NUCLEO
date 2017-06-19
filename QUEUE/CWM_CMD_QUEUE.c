@@ -44,3 +44,12 @@ int CWM_CMD_QUEUE_SEND(pCWM_CMD_t data)
     }
     return 0;
 }
+
+int CWM_CMD_QUEUE_SEND_ISR(pCWM_CMD_t data)
+{
+    if (osMessagePutMem(CWM_CMD_QUEUE, data, 100) != osOK)
+    {
+        return CWM_CMD_FAIL_SEND_TO_QUEUE;
+    }
+    return 0;
+}

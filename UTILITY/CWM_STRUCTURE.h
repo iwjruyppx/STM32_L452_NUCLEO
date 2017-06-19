@@ -14,7 +14,7 @@ typedef struct {
             float data[3];
             };
         struct  {
-            char string[128];
+            char string[32];
             };
     };
 }CWM_CMD_t, *pCWM_CMD_t;

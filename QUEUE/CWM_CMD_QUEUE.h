@@ -7,5 +7,6 @@
 void CWM_CMD_QUEUE_INIT(void);
 void CWM_CMD_QUEUE_LISTEN(void);
 int CWM_CMD_QUEUE_SEND(pCWM_CMD_t data);
+int CWM_CMD_QUEUE_SEND_ISR(pCWM_CMD_t data);
 
 #endif /* __CWM_CMD_QUEUE_H */

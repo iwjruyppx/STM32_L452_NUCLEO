@@ -43,7 +43,7 @@ int CWM_SCREEN_CMD(int cmd, void *p)
             TM_SSD1306_UpdateScreen();
             break;
         case CWM_CMD_SCREEN_WRITE_AUTO_NEW_LINE:
-            return CWM_SSD1306_Puts_Auto_newLine(cmd_data->string, &TM_Font_11x18, SSD1306_COLOR_WHITE);
+            return CWM_SSD1306_Puts_Auto_newLine(cmd_data->string, &TM_Font_7x10, SSD1306_COLOR_WHITE);
 
         default:
             break;

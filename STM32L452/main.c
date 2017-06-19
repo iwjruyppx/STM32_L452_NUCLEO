@@ -10,13 +10,22 @@
 
 #include "CWM_TASK1.h"
 #include "CWM_TASK2.h"
+#include "CWM_GPS.h"
+#include "CWM_MSG_QUEUE.h"
 
 int64_t gTimestamp = 0ll;
+/*
+    __disable_interrupt();
+    __DSB();
+    __ISB();
+    __enable_interrupt();
+    */
 
 void SystemClock_Config(void);
 
-void PLATFORM_INIT(void)
+static void PLATFORM_INIT(void)
 {
+
   HAL_Init();
 
   /* Configure the System clock to 80 MHz */
@@ -28,12 +37,16 @@ void PLATFORM_INIT(void)
   /* I2C Init*/
   CWM_I2C_INIT();
 
+
+    CWM_GPS_INIT();
   /* LPUART Init*/
-//  CWM_UART_INIT();
+    CWM_UART_INIT();
+  
 }
 
-void FreeRTOS_INIT(void)
+static void FreeRTOS_INIT(void)
 {
+    CWM_MSG_QUEUE_INIT();
     CWM_CMD_QUEUE_INIT();
     CWM_TASK1_INIT();
     CWM_TASK2_INIT();
@@ -133,7 +146,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
   RCC_OscInitStruct.PLL.PLLN = 40;
-  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLR = 8;
   RCC_OscInitStruct.PLL.PLLP = 7;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)

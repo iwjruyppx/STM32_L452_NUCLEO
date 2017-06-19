@@ -274,16 +274,22 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   __HAL_LINKDMA(huart, hdmarx, hdma_rx);
     
   /*##-4- Configure the NVIC for DMA #########################################*/
+
+  /* by Paul
+    FreeRTOS priority default setting is 80, if we setting  HAL_NVIC_SetPriority(USARTx_DMA_RX_IRQn, 8, 0); 
+    ucCurrentPriority == 128 (2^8)
+    if we not set this parameter over than 80, system will block on void vPortValidateInterruptPriority( void ) function.
+  */
   /* NVIC configuration for DMA transfer complete interrupt (UART4_TX) */
-  HAL_NVIC_SetPriority(USARTx_DMA_TX_IRQn, 0, 1);
+  HAL_NVIC_SetPriority(USARTx_DMA_TX_IRQn, 8, 1);
   HAL_NVIC_EnableIRQ(USARTx_DMA_TX_IRQn);
     
   /* NVIC configuration for DMA transfer complete interrupt (UART4_RX) */
-  HAL_NVIC_SetPriority(USARTx_DMA_RX_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(USARTx_DMA_RX_IRQn, 8, 0);
   HAL_NVIC_EnableIRQ(USARTx_DMA_RX_IRQn);
   
   /* NVIC for USART, to catch the TX complete */
-  HAL_NVIC_SetPriority(USARTx_IRQn, 0, 1);
+  HAL_NVIC_SetPriority(USARTx_IRQn, 8, 1);
   HAL_NVIC_EnableIRQ(USARTx_IRQn);
 }
 

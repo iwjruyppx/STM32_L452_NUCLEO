@@ -78,15 +78,11 @@ void CWM_I2CMASTER_DMA_WRITE(uint16_t DevAddress, uint8_t *pData, uint16_t Size)
      "aTxBuffer" buffer */
   do
   {
-    __disable_interrupt();
-    __DSB();
-    __ISB();
     if(HAL_I2C_Master_Transmit(&I2cHandle, DevAddress, pData, Size, 10)!= HAL_OK)
     {
       /* Error_Handler() function is called when error occurs. */
-      Error_Handler();
+//      Error_Handler();
     }
-    __enable_interrupt();
 
     /*##-3- Wait for the end of the transfer #################################*/  
     /*  Before starting a new communication transfer, you need to check the current   

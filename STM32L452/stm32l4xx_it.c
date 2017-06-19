@@ -140,6 +140,11 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32l4xx.s).                                               */
 /******************************************************************************/
+
+void I2Cx_EV_IRQHandler(void);
+void I2Cx_ER_IRQHandler(void);
+void I2Cx_DMA_RX_IRQHandler(void);
+void I2Cx_DMA_TX_IRQHandler(void);
 /**
   * @brief  This function handles I2C event interrupt request.
   * @param  None
@@ -186,6 +191,9 @@ void I2Cx_DMA_TX_IRQHandler(void)
   HAL_DMA_IRQHandler(I2cHandle.hdmatx);
 }
 
+void USARTx_DMA_RX_IRQHandler(void);
+void USARTx_DMA_TX_IRQHandler(void);
+void USARTx_IRQHandler(void);
 /**
   * @brief  This function handles DMA interrupt request.  
   * @param  None

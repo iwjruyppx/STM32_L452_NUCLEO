@@ -23,6 +23,6 @@ static void Task2(const void *argument)
 
 void CWM_TASK2_INIT(void)
 {
-    osThreadDef(Task_Name, Task2, osPriorityRealtime, 0, configMINIMAL_STACK_SIZE);
+    osThreadDef(Task_Name, Task2, osPriorityNormal, 0, configMINIMAL_STACK_SIZE);
     osThreadCreate(osThread(Task_Name), NULL);
 }
