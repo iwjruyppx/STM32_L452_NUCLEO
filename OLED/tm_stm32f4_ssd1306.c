@@ -17,90 +17,98 @@
  * |----------------------------------------------------------------------
  */
 #include "tm_stm32f4_ssd1306.h"
-#include "CWM_STM32L452_I2C.h"
 
-/* Write command */
-#define SSD1306_WRITECOMMAND(command)      CWM_I2CMASTER_DMA_WRITE_REG_SINGLE( SSD1306_I2C_ADDR, 0x00, (command))
-/* Write data */
-#define SSD1306_WRITEDATA(data)            CWM_I2CMASTER_DMA_WRITE_REG_SINGLE(SSD1306_I2C_ADDR, 0x40, (data))
 /* Absolute value */
 #define ABS(x)   ((x) > 0 ? (x) : -(x))
 
-/* SSD1306 data buffer */
-static uint8_t SSD1306_Buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8];
-
 /* Private SSD1306 structure */
 typedef struct {
-	uint16_t CurrentX;
-	uint16_t CurrentY;
-	uint8_t Inverted;
-	uint8_t Initialized;
+    uint16_t CurrentX;
+    uint16_t CurrentY;
+    uint8_t Inverted;
+    uint8_t Initialized;
+    uint8_t SSD1306_Buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8]; /* SSD1306 data buffer */
+    ssd1306_callback_t *CWMcbfuncs ;
 } SSD1306_t;
 
 /* Private variable */
 static SSD1306_t SSD1306;
 
-uint8_t TM_SSD1306_Init(void) {
-	
-  
-	/* Init LCD */
-	SSD1306_WRITECOMMAND(0xAE); //display off
-	SSD1306_WRITECOMMAND(0x20); //Set Memory Addressing Mode   
-	SSD1306_WRITECOMMAND(0x10); //00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
-	SSD1306_WRITECOMMAND(0xB0); //Set Page Start Address for Page Addressing Mode,0-7
-	SSD1306_WRITECOMMAND(0xC8); //Set COM Output Scan Direction
-	SSD1306_WRITECOMMAND(0x00); //---set low column address
-	SSD1306_WRITECOMMAND(0x10); //---set high column address
-	SSD1306_WRITECOMMAND(0x40); //--set start line address
-	SSD1306_WRITECOMMAND(0x81); //--set contrast control register
-	SSD1306_WRITECOMMAND(0xFF);
-	SSD1306_WRITECOMMAND(0xA1); //--set segment re-map 0 to 127
-	SSD1306_WRITECOMMAND(0xA6); //--set normal display
-	SSD1306_WRITECOMMAND(0xA8); //--set multiplex ratio(1 to 64)
-	SSD1306_WRITECOMMAND(0x3F); //
-	SSD1306_WRITECOMMAND(0xA4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
-	SSD1306_WRITECOMMAND(0xD3); //-set display offset
-	SSD1306_WRITECOMMAND(0x00); //-not offset
-	SSD1306_WRITECOMMAND(0xD5); //--set display clock divide ratio/oscillator frequency
-	SSD1306_WRITECOMMAND(0xF0); //--set divide ratio
-	SSD1306_WRITECOMMAND(0xD9); //--set pre-charge period
-	SSD1306_WRITECOMMAND(0x22); //
-	SSD1306_WRITECOMMAND(0xDA); //--set com pins hardware configuration
-	SSD1306_WRITECOMMAND(0x12);
-	SSD1306_WRITECOMMAND(0xDB); //--set vcomh
-	SSD1306_WRITECOMMAND(0x20); //0x20,0.77xVcc
-	SSD1306_WRITECOMMAND(0x8D); //--set DC-DC enable
-	SSD1306_WRITECOMMAND(0x14); //
-	SSD1306_WRITECOMMAND(0xAF); //--turn on SSD1306 panel
-	
-	/* Clear screen */
-	TM_SSD1306_Fill(SSD1306_COLOR_BLACK);
-	
-	/* Update screen */
-	TM_SSD1306_UpdateScreen();
-	
-	/* Set default values */
-	SSD1306.CurrentX = 0;
-	SSD1306.CurrentY = 0;
-	
-	/* Initialized OK */
-	SSD1306.Initialized = 1;
-	
-	/* Return OK */
-	return 1;
+/* Write command */
+static void SSD1306_WRITECOMMAND(uint8_t cmd)
+{
+    if(SSD1306.CWMcbfuncs->cbfunc_SingleRegWrite != NULL)
+        SSD1306.CWMcbfuncs->cbfunc_SingleRegWrite(SSD1306_I2C_ADDR, 0x00, (cmd));
+}
+
+/* Write command */
+static void SSD1306_REG_WRITE(uint8_t Reg, uint8_t *pData, uint16_t Size)
+{
+    if(SSD1306.CWMcbfuncs->cbfunc_RegWrite != NULL)
+        SSD1306.CWMcbfuncs->cbfunc_RegWrite(SSD1306_I2C_ADDR, Reg, pData, Size);
+}
+
+uint8_t TM_SSD1306_Init(ssd1306_callback_t *cb_funcs) {
+    SSD1306.CWMcbfuncs = cb_funcs;
+    
+    /* Init LCD */
+    SSD1306_WRITECOMMAND(0xAE); //display off
+    SSD1306_WRITECOMMAND(0x20); //Set Memory Addressing Mode   
+    SSD1306_WRITECOMMAND(0x10); //00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
+    SSD1306_WRITECOMMAND(0xB0); //Set Page Start Address for Page Addressing Mode,0-7
+    SSD1306_WRITECOMMAND(0xC8); //Set COM Output Scan Direction
+    SSD1306_WRITECOMMAND(0x00); //---set low column address
+    SSD1306_WRITECOMMAND(0x10); //---set high column address
+    SSD1306_WRITECOMMAND(0x40); //--set start line address
+    SSD1306_WRITECOMMAND(0x81); //--set contrast control register
+    SSD1306_WRITECOMMAND(0xFF);
+    SSD1306_WRITECOMMAND(0xA1); //--set segment re-map 0 to 127
+    SSD1306_WRITECOMMAND(0xA6); //--set normal display
+    SSD1306_WRITECOMMAND(0xA8); //--set multiplex ratio(1 to 64)
+    SSD1306_WRITECOMMAND(0x3F); //
+    SSD1306_WRITECOMMAND(0xA4); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
+    SSD1306_WRITECOMMAND(0xD3); //-set display offset
+    SSD1306_WRITECOMMAND(0x00); //-not offset
+    SSD1306_WRITECOMMAND(0xD5); //--set display clock divide ratio/oscillator frequency
+    SSD1306_WRITECOMMAND(0xF0); //--set divide ratio
+    SSD1306_WRITECOMMAND(0xD9); //--set pre-charge period
+    SSD1306_WRITECOMMAND(0x22); //
+    SSD1306_WRITECOMMAND(0xDA); //--set com pins hardware configuration
+    SSD1306_WRITECOMMAND(0x12);
+    SSD1306_WRITECOMMAND(0xDB); //--set vcomh
+    SSD1306_WRITECOMMAND(0x20); //0x20,0.77xVcc
+    SSD1306_WRITECOMMAND(0x8D); //--set DC-DC enable
+    SSD1306_WRITECOMMAND(0x14); //
+    SSD1306_WRITECOMMAND(0xAF); //--turn on SSD1306 panel
+
+    /* Clear screen */
+    TM_SSD1306_Fill(SSD1306_COLOR_BLACK);
+
+    /* Update screen */
+    TM_SSD1306_UpdateScreen();
+
+    /* Set default values */
+    SSD1306.CurrentX = 0;
+    SSD1306.CurrentY = 0;
+
+    /* Initialized OK */
+    SSD1306.Initialized = 1;
+
+    /* Return OK */
+    return 1;
 }
 
 void TM_SSD1306_UpdateScreen(void) {
-	uint8_t m;
-	
-	for (m = 0; m < 8; m++) {
-		SSD1306_WRITECOMMAND(0xB0 + m);
-		SSD1306_WRITECOMMAND(0x00);
-		SSD1306_WRITECOMMAND(0x10);
-		
-		/* Write multi data */
-		CWM_I2CMASTER_DMA_WRITE_REG(SSD1306_I2C_ADDR, 0x40, &SSD1306_Buffer[SSD1306_WIDTH * m], SSD1306_WIDTH);
-	}
+    uint8_t m;
+
+    for (m = 0; m < 8; m++) {
+        SSD1306_WRITECOMMAND(0xB0 + m);
+        SSD1306_WRITECOMMAND(0x00);
+        SSD1306_WRITECOMMAND(0x10);
+
+        /* Write multi data */
+        SSD1306_REG_WRITE( 0x40, &SSD1306.SSD1306_Buffer[SSD1306_WIDTH * m], SSD1306_WIDTH);
+    }
 }
 
 void TM_SSD1306_ToggleInvert(void) {
@@ -110,14 +118,14 @@ void TM_SSD1306_ToggleInvert(void) {
 	SSD1306.Inverted = !SSD1306.Inverted;
 	
 	/* Do memory toggle */
-	for (i = 0; i < sizeof(SSD1306_Buffer); i++) {
-		SSD1306_Buffer[i] = ~SSD1306_Buffer[i];
+	for (i = 0; i < sizeof(SSD1306.SSD1306_Buffer); i++) {
+		SSD1306.SSD1306_Buffer[i] = ~SSD1306.SSD1306_Buffer[i];
 	}
 }
 
 void TM_SSD1306_Fill(SSD1306_COLOR_t color) {
 	/* Set memory */
-	memset(SSD1306_Buffer, (color == SSD1306_COLOR_BLACK) ? 0x00 : 0xFF, sizeof(SSD1306_Buffer));
+	memset(SSD1306.SSD1306_Buffer, (color == SSD1306_COLOR_BLACK) ? 0x00 : 0xFF, sizeof(SSD1306.SSD1306_Buffer));
 }
 
 void TM_SSD1306_DrawPixel(uint16_t x, uint16_t y, SSD1306_COLOR_t color) {
@@ -136,9 +144,9 @@ void TM_SSD1306_DrawPixel(uint16_t x, uint16_t y, SSD1306_COLOR_t color) {
 	
 	/* Set color */
 	if (color == SSD1306_COLOR_WHITE) {
-		SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
+		SSD1306.SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
 	} else {
-		SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
+		SSD1306.SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
 	}
 }
 
@@ -472,7 +480,7 @@ static uint8_t CWM_BUFF_SHIFT(uint8_t hight, uint8_t low, uint8_t shift)
 
 static void CWM_SET_SSD1306_SCREEN_MEMORY(int x, int y8, uint8_t data)
 {
-    SSD1306_Buffer[x + (y8 * SSD1306_WIDTH)] = data;
+    SSD1306.SSD1306_Buffer[x + (y8 * SSD1306_WIDTH)] = data;
 }
 
 void CWM_SSD1306_SHIFT_PIXEL(int shift_y){
@@ -483,7 +491,7 @@ void CWM_SSD1306_SHIFT_PIXEL(int shift_y){
 
     for(y=0;y<((SSD1306_HEIGHT/8) -shift_byte); y++){
         for(x=0;x<SSD1306_WIDTH;x++){
-            data = CWM_BUFF_SHIFT( SSD1306_Buffer[x + ((y + 1 + shift_byte) * SSD1306_WIDTH)] ,SSD1306_Buffer[x + ((y + shift_byte) * SSD1306_WIDTH)], shift_bit);
+            data = CWM_BUFF_SHIFT( SSD1306.SSD1306_Buffer[x + ((y + 1 + shift_byte) * SSD1306_WIDTH)] ,SSD1306.SSD1306_Buffer[x + ((y + shift_byte) * SSD1306_WIDTH)], shift_bit);
             CWM_SET_SSD1306_SCREEN_MEMORY( x, y, data);
         }
     }
@@ -498,7 +506,7 @@ void CWM_SSD1306_SHIFT_PIXEL(int shift_y){
     if(shift_bit){
         y = ((SSD1306_HEIGHT/8) -shift_byte -1);
         for(x=0;x<SSD1306_WIDTH;x++){
-            data = SSD1306_Buffer[x + ((y) * SSD1306_WIDTH)] & (0xff>>shift_bit);
+            data = SSD1306.SSD1306_Buffer[x + ((y) * SSD1306_WIDTH)] & (0xff>>shift_bit);
             CWM_SET_SSD1306_SCREEN_MEMORY( x, y, data);
         }
         

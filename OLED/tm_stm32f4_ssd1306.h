@@ -145,6 +145,24 @@ typedef enum {
 	SSD1306_COLOR_BLACK = 0x00, /*!< Black color, no pixel */
 	SSD1306_COLOR_WHITE = 0x01  /*!< Pixel is set. Color depends on LCD */
 } SSD1306_COLOR_t;
+    
+typedef struct {
+    /**
+     * I2c Single reg write.
+     * Input: 
+     *          uint16_t DevAddress, uint8_t Reg, uint8_t sData
+     */
+    void (*cbfunc_SingleRegWrite)(uint16_t, uint8_t, uint8_t);
+    
+    /**
+     * I2c reg write.
+     * Input: 
+     *          uint16_t DevAddress, uint8_t Reg, uint8_t *pData, uint16_t Size
+     */
+    void (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
+
+} ssd1306_callback_t;
+
 
 /**
  * @}
@@ -163,7 +181,7 @@ typedef enum {
  *           - 0: LCD was not detected on I2C port
  *           - > 0: LCD initialized OK and ready to use
  */
-uint8_t TM_SSD1306_Init(void);
+uint8_t TM_SSD1306_Init(ssd1306_callback_t *cb_funcs);
 
 /** 
  * @brief  Updates buffer from internal RAM to LCD

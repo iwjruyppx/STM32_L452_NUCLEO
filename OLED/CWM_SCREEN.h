@@ -11,6 +11,7 @@ typedef struct {
     };
 }CWM_SCREEN_CMD_t, *pCWM_SCREEN_CMD_t;
 
+int CWM_SCREEN_INIT(void);
 int CWM_SCREEN_CMD(int cmd, void *p);
 int CWM_SCREEN_GET_STATE(void);
 

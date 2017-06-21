@@ -1,11 +1,11 @@
 
 #include "CWM_GPS_PASSER.h"
 
-gps_callback_t *CWMcbfuncs = NULL;
-
 #define PARAM_TXTMAXLEN   64
 #define PARAM_ARRAYSIZE   64
 #define DATABUFSIZ  128
+
+static gps_callback_t *CWMcbfuncs = NULL;
 
 typedef struct {
     int count;

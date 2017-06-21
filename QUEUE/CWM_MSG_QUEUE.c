@@ -11,7 +11,7 @@
 #include "CWM_CMD_PASSER.h"
 
 #define CMD_QUEUE_SIZE 16
-osMessageQId CWM_MSG_QUEUE;
+static osMessageQId CWM_MSG_QUEUE;
 
 void CWM_MSG_QUEUE_INIT(void)
 {

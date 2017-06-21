@@ -37,8 +37,8 @@ static void PLATFORM_INIT(void)
   /* I2C Init*/
   CWM_I2C_INIT();
 
-
-    CWM_GPS_INIT();
+    CWM_SCREEN_INIT();
+   CWM_GPS_INIT();
   /* LPUART Init*/
     CWM_UART_INIT();
   

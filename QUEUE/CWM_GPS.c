@@ -11,9 +11,9 @@
 #include "CWM_GPS_PASSER.h"
 #include "CWM_UART_QUEUE.h"
 
-gps_callback_t cb_funcs;
+static gps_callback_t gps_cb_funcs;
 
-CWM_GPS_INFO GPS_INFO;
+static CWM_GPS_INFO GPS_INFO;
 
 static int get_buff_string(void)
 {
@@ -45,12 +45,12 @@ static void GPS_RMC_LISTEN(gps_rmc_t *p)
 }
 void CWM_GPS_INIT(void)
 {
-    cb_funcs.cbfunc_GetNMEAString = get_buff_string;
-    cb_funcs.cbfunc_log = GPS_LOG_LISTEN;
-    cb_funcs.cbfunc_gga = GPS_GGA_LISTEN;
-    cb_funcs.cbfunc_gsa = GPS_GSA_LISTEN;
-    cb_funcs.cbfunc_gsv = GPS_GSV_LISTEN;
-    cb_funcs.cbfunc_rmc = GPS_RMC_LISTEN;
+    gps_cb_funcs.cbfunc_GetNMEAString = get_buff_string;
+    gps_cb_funcs.cbfunc_log = GPS_LOG_LISTEN;
+    gps_cb_funcs.cbfunc_gga = GPS_GGA_LISTEN;
+    gps_cb_funcs.cbfunc_gsa = GPS_GSA_LISTEN;
+    gps_cb_funcs.cbfunc_gsv = GPS_GSV_LISTEN;
+    gps_cb_funcs.cbfunc_rmc = GPS_RMC_LISTEN;
     
-    CWM_GPS_PASSER_INIT(&cb_funcs);
+    CWM_GPS_PASSER_INIT(&gps_cb_funcs);
 }

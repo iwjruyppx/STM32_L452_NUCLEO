@@ -8,10 +8,20 @@
 
 #include "CWM_SCREEN.h"
 
+#include "CWM_STM32L452_I2C.h"
+
 #include "tm_stm32f4_ssd1306.h"
 #include "tm_stm32f4_fonts.h"
 
 static int SCREEN_CURRENT_STATE = CWM_CMD_FALL_SCREEN_NO_INITIAL;
+static ssd1306_callback_t screen_cb_funcs;
+    
+int CWM_SCREEN_INIT(void)
+{
+    screen_cb_funcs.cbfunc_SingleRegWrite= CWM_I2CMASTER_DMA_WRITE_REG_SINGLE;
+    screen_cb_funcs.cbfunc_RegWrite = CWM_I2CMASTER_DMA_WRITE_REG;
+    return 0;
+}
 
 int CWM_SCREEN_GET_STATE(void)
 {
@@ -26,7 +36,7 @@ int CWM_SCREEN_CMD(int cmd, void *p)
     {
         case CWM_CMD_SCREEN_INIT:
             SCREEN_CURRENT_STATE = cmd;
-            TM_SSD1306_Init();
+            TM_SSD1306_Init(&screen_cb_funcs);
             break;
         case CWM_CMD_SCREEN_ON:
             SCREEN_CURRENT_STATE = cmd;
