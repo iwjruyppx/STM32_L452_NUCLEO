@@ -2,7 +2,6 @@
 #ifndef __CWM_GPS_H
 #define __CWM_GPS_H
 
-#include "CWM_UTILITY.h"
 #include "CWM_GPS_PASSER.h"
 
 typedef struct {

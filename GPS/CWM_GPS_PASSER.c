@@ -1,13 +1,5 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
 #include "CWM_GPS_PASSER.h"
-#include "CWM_UART_QUEUE.h"
 
 gps_callback_t *CWMcbfuncs = NULL;
 
@@ -28,15 +20,6 @@ void CWM_GPS_PASSER_INIT(gps_callback_t *cb_funcs)
     StringBuff.count = 0;
     memset(StringBuff.data, 0x00, DATABUFSIZ);
 }
-
-static int get_buff_string(void)
-{
-    uint8_t data;
-    if(CWM_UART_QUEUE_GET(&data, 1))
-        return -1;
-    return data;
-}
-
 static uint8_t calcCheckSum(char *buf, size_t siz) {
     uint8_t cs = 0;
     for (int i = 0; i < siz; i++) {
@@ -248,16 +231,20 @@ static int parseAndCallbackUnknown(char *src, gps_callback_t *cbfuncs) {
 
 static int CMW_GPS_STRING_PASSER(char *data)
 {
-
     int status;
     int c;
+    
+    if (CWMcbfuncs->cbfunc_GetNMEAString == NULL) {
+        return -1;
+    }
+    
     /*
      * Read from a serial buffer.
      */
     do {
         status = 0;
         do {
-            c = get_buff_string();
+            c = CWMcbfuncs->cbfunc_GetNMEAString();
             if (c < 0) {
                 return -1;
             }
@@ -361,7 +348,6 @@ int CWM_GPS_DATA_PASSER_PROCESS(void)
         if(CWM_GPS_CHECKSUM_VERIFY(src) == 0){
             CMW_GPS_PASSER(src);
         }
-
     }
     return 0;
 }

@@ -2,7 +2,12 @@
 #ifndef __CWM_GPS_PASSER_H
 #define __CWM_GPS_PASSER_H
 
-#include "CWM_UTILITY.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <errno.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
 
 /**
  * GGA - Global Positioning System Fixed Data.
@@ -73,6 +78,15 @@ typedef struct {
 
 typedef struct {
     /**
+     * A callback function to get nmeadata string data.
+     * User need implement this function for GPS Passer to get nmea string.
+     * retrun: 
+     *            -1:no string
+     *            0~127 string data.
+     */
+    int (*cbfunc_GetNMEAString)(void);
+    
+    /**
      * A callback function for logging data.
      */
     void (*cbfunc_log)(char *str);
@@ -140,3 +154,4 @@ void CWM_GPS_PASSER_INIT(gps_callback_t *cb_funcs);
 int CWM_GPS_DATA_PASSER_PROCESS(void);
 
 #endif /* __CWM_GPS_PASSER_H */
+

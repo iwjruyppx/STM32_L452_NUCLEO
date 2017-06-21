@@ -6,12 +6,22 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "CWM_GPS_PASSER.h"
 #include "CWM_GPS.h"
+
+#include "CWM_GPS_PASSER.h"
+#include "CWM_UART_QUEUE.h"
 
 gps_callback_t cb_funcs;
 
 CWM_GPS_INFO GPS_INFO;
+
+static int get_buff_string(void)
+{
+    uint8_t data;
+    if(CWM_UART_QUEUE_GET(&data, 1))
+        return -1;
+    return data;
+}
 
 static void GPS_LOG_LISTEN(char *str)
 {
@@ -33,10 +43,9 @@ static void GPS_RMC_LISTEN(gps_rmc_t *p)
 {
     memcpy(&GPS_INFO.rmc, p, sizeof(gps_rmc_t));
 }
-
-
 void CWM_GPS_INIT(void)
 {
+    cb_funcs.cbfunc_GetNMEAString = get_buff_string;
     cb_funcs.cbfunc_log = GPS_LOG_LISTEN;
     cb_funcs.cbfunc_gga = GPS_GGA_LISTEN;
     cb_funcs.cbfunc_gsa = GPS_GSA_LISTEN;
