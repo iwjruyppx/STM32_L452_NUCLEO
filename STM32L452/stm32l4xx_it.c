@@ -38,11 +38,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32l4xx_it.h"
-#include "cmsis_os.h"
-#include "CWM_STM32L452_I2C.h"
-#include "CWM_STM32L452_UART.h"
+
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -230,5 +232,18 @@ void USARTx_IRQHandler(void)
 {
   HAL_UART_IRQHandler(&UartHandle);
 }
+
+/**
+* @brief  This function handles DMA interrupt request.
+* @param  None
+* @retval None
+*/
+
+void TIMx_DMA_IRQHandler(void);
+void TIMx_DMA_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(CWMTimHandle.hdma[TIM_DMA_ID_CC3]);
+}
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1,12 +1,4 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
-#include "cmsis_os.h"
 #include "CWM_MSG_QUEUE.h"
 #include "CWM_CMD_PASSER.h"
 

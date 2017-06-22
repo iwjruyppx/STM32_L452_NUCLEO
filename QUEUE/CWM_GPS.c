@@ -1,14 +1,6 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
 #include "CWM_GPS.h"
 
-#include "CWM_GPS_PASSER.h"
 #include "CWM_UART_QUEUE.h"
 
 static gps_callback_t gps_cb_funcs;

@@ -2,6 +2,10 @@
 #ifndef __CWM_STM32L452_I2C_H
 #define __CWM_STM32L452_I2C_H
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Cube Hal include file*/
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_nucleo.h"
 

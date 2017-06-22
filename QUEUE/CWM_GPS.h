@@ -2,7 +2,8 @@
 #ifndef __CWM_GPS_H
 #define __CWM_GPS_H
 
-#include "CWM_GPS_PASSER.h"
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
 
 typedef struct {
     gps_gga_t   gga;

@@ -5,6 +5,8 @@
 #include "cmsis_os.h"
 #include "CWM_STM32L452_I2C.h"
 #include "CWM_STM32L452_UART.h"
+#include "CWM_STM32L452_TIMER.h"
+
 #include "CWM_SCREEN.h"
 #include "CWM_CMD_QUEUE.h"
 
@@ -26,21 +28,22 @@ void SystemClock_Config(void);
 static void PLATFORM_INIT(void)
 {
 
-  HAL_Init();
+    HAL_Init();
 
-  /* Configure the System clock to 80 MHz */
-  SystemClock_Config();
-  
-  /* Configure LED2 */
-  BSP_LED_Init(LED2);
-  
-  /* I2C Init*/
-  CWM_I2C_INIT();
+    /* Configure the System clock to 80 MHz */
+    SystemClock_Config();
+
+    /* Configure LED2 */
+    BSP_LED_Init(LED2);
+
+    /* I2C Init*/
+    CWM_I2C_INIT();
 
     CWM_SCREEN_INIT();
-   CWM_GPS_INIT();
-  /* LPUART Init*/
+    CWM_GPS_INIT();
+    /* LPUART Init*/
     CWM_UART_INIT();
+    CWM_TIMER_INIT();
   
 }
 

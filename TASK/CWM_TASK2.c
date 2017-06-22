@@ -1,13 +1,9 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
-#include "cmsis_os.h"
 #include "CWM_TASK2.h"
+
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 
 #define Task_Name "CWMTask2"
 #include "CWM_CMD_QUEUE.h"

@@ -2,6 +2,7 @@
 #ifndef __CWM_CMD_PASSER_H
 #define __CWM_CMD_PASSER_H
 
+/*Standard Utility include file*/
 #include "CWM_UTILITY.h"
 
 void MsgPasser(pCWM_CMD_t cmd);

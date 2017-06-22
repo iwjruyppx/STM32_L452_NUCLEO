@@ -1,6 +1,4 @@
 #include "CwmQueue.h"
-/* Compiler includes. */
-#include <intrinsics.h>
 
 __weak void IRQ_ENABLE(void);
 __weak void IRQ_DISABLE(void);

@@ -1,13 +1,6 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
-#include "cmsis_os.h"
 #include "CWM_CMD_QUEUE.h"
+
 #include "CWM_CMD_PASSER.h"
 
 #define CMD_QUEUE_SIZE 16

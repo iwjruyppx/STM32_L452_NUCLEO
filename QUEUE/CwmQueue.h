@@ -1,12 +1,7 @@
 #ifndef __CwmQueue_H__
 #define __CwmQueue_H__
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
+#include "CWM_UTILITY.h"
 
 typedef struct QueueDefinition
 {

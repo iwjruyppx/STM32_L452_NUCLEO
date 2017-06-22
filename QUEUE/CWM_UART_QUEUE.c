@@ -1,12 +1,4 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
-#include "CwmQueue.h"
 #include "CWM_UART_QUEUE.h"
 
 static CwmQueue_t mem;

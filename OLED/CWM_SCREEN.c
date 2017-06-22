@@ -1,17 +1,8 @@
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
 #include "CWM_SCREEN.h"
 
-#include "CWM_STM32L452_I2C.h"
-
-#include "tm_stm32f4_ssd1306.h"
-#include "tm_stm32f4_fonts.h"
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
 
 static int SCREEN_CURRENT_STATE = CWM_CMD_FALL_SCREEN_NO_INITIAL;
 static ssd1306_callback_t screen_cb_funcs;
