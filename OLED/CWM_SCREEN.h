@@ -13,7 +13,6 @@ typedef struct {
 
 int CWM_SCREEN_INIT(void);
 int CWM_SCREEN_CMD(int cmd, void *p);
-int CWM_SCREEN_GET_STATE(void);
 
 int CWM_SCREEN_WRITE_AUTO_NEW_LINE(char * data);
 

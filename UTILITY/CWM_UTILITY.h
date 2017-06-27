@@ -22,19 +22,23 @@
 /*FreeRTOS include*/
 #include "cmsis_os.h"
 
-
 /*********************************************************/
-/************//*Standard UTILITY OR STRUCTURE*/
+/************//*Standard UTILITY/STRUCTURE/ERROR CODE */
 /*********************************************************/
 #include "CWM_CMD.h"
 #include "CWM_STRUCTURE.h"
+#include "CWM_ERROR_CODE.h"
 /*********************************************************/
-/************//*Standard UTILITY OR STRUCTURE END*/
+/************//*Standard UTILITY/STRUCTURE/ERROR CODE */
 /*********************************************************/
 
 /*********************************************************/
 /************//*MODULE*/
 /*********************************************************/
+
+/*Double Link List Module*/
+#include "CWM_LINK_LIST_TEMPLATE.h"
+
 /*GPS Module*/
 #include "CWM_GPS_PASSER.h"
 
@@ -50,5 +54,6 @@
 /************//*MODULE END*/
 /*********************************************************/
 
+#define Error_Handler() while(1);
 
 #endif /* __CWM_UTILITY_H */

@@ -25,6 +25,10 @@ int64_t gTimestamp = 0ll;
 
 void SystemClock_Config(void);
 
+static void UTILITY_INIT(void)
+{
+    CWM_MSG_QUEUE_INIT();
+}
 static void PLATFORM_INIT(void)
 {
 
@@ -49,26 +53,26 @@ static void PLATFORM_INIT(void)
 
 static void FreeRTOS_INIT(void)
 {
-    CWM_MSG_QUEUE_INIT();
-    CWM_CMD_QUEUE_INIT();
     CWM_TASK1_INIT();
     CWM_TASK2_INIT();
 }
 
 int main(void)
 {
-  
-  /* Platform Init*/
-  PLATFORM_INIT();
-  
-  /* FreeRTOS Init*/
-  FreeRTOS_INIT();
+    /*Need initial for first*/
+    UTILITY_INIT();
 
-  /* Start scheduler */
-  osKernelStart();
+    /* Platform Init*/
+    PLATFORM_INIT();
 
-  /* We should never get here as control is now taken by the scheduler */
-  for (;;);
+    /* FreeRTOS Init*/
+    FreeRTOS_INIT();
+
+    /* Start scheduler */
+    osKernelStart();
+
+    /* We should never get here as control is now taken by the scheduler */
+    for (;;);
 
 }
 

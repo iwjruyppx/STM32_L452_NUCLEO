@@ -6,8 +6,6 @@ I2C_HandleTypeDef I2cHandle;
 
 extern int64_t gTimestamp;
 
-static void Error_Handler(void);
-
 void CWM_I2C_INIT(void)
 {
     CWM_I2C_MASTER_DMA_INIT();
@@ -137,20 +135,4 @@ void CWM_I2CMASTER_DMA_READ(uint16_t DevAddress, uint8_t *pData, uint16_t Size)
   }
   while(HAL_I2C_GetError(&I2cHandle) == HAL_I2C_ERROR_AF);
 
-}
-
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
-static void Error_Handler(void)
-{
-  /* LED2 is slowly blinking (1 sec. period) */
-  while(1)
-  {    
-    BSP_LED_Toggle(LED2); 
-    HAL_Delay(1000);
-  } 
 }
