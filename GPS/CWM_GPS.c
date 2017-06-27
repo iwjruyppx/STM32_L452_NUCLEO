@@ -1,6 +1,7 @@
 
 #include "CWM_GPS.h"
 
+#include "CWM_MSG_QUEUE.h"
 #include "CWM_UART_QUEUE.h"
 
 static gps_callback_t gps_cb_funcs;
@@ -35,8 +36,17 @@ static void GPS_RMC_LISTEN(gps_rmc_t *p)
 {
     memcpy(&GPS_INFO.rmc, p, sizeof(gps_rmc_t));
 }
+
+static void evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE(void *handle, void *evtData)
+{
+    CWM_GPS_DATA_PASSER_PROCESS();
+}
 void CWM_GPS_INIT(void)
 {
+    /*GPS event listen register*/
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_UART_LISTEN_RX_UPDATE, NULL, evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE);
+
+    /*GPS passer register*/
     gps_cb_funcs.cbfunc_GetNMEAString = get_buff_string;
     gps_cb_funcs.cbfunc_log = GPS_LOG_LISTEN;
     gps_cb_funcs.cbfunc_gga = GPS_GGA_LISTEN;
