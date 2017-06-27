@@ -4,11 +4,14 @@
 #include "CWM_UART_QUEUE.h"
 #include "CWM_MSG_QUEUE.h"
 
+/* Size of Reception buffer */
+#define MAX_RXBUFFERSIZE                      128
+
 typedef struct {
     int status;
     int size;
     int errCode;
-    uint8_t RxBuffer[RXBUFFERSIZE];
+    uint8_t RxBuffer[MAX_RXBUFFERSIZE];
     CWM_UART_CALLBACK callBack;
 }CWM_UART_LISTEN_t, *pCWM_UART_LISTEN_t;
 
@@ -52,7 +55,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == CWM_UART4)
+    if(huart->Instance == UART4)
     {
         /* Set transmission flag: trasfer complete*/
         if(listen_uart4.status)
@@ -82,7 +85,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == CWM_UART4)
+    if(huart->Instance == UART4)
     {
         if(listen_uart4.status)
         {
@@ -110,7 +113,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == CWM_UART4)
+    if(huart->Instance == UART4)
         HAL_UART_MspInit_UART4_PA0_PA1(huart);
 #endif
 
@@ -129,7 +132,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == CWM_UART4)
+    if(huart->Instance == UART4)
         HAL_UART_MspDeInit_UART4_PA0_PA1(huart);
 #endif
 
