@@ -1,5 +1,6 @@
 
 #include "CWM_STM32L452_UART.h"
+#include "CWM_STM32L452_UART4.h"
 #include "CWM_UART_QUEUE.h"
 #include "CWM_MSG_QUEUE.h"
 
@@ -11,95 +12,23 @@ typedef struct {
     CWM_UART_CALLBACK callBack;
 }CWM_UART_LISTEN_t, *pCWM_UART_LISTEN_t;
 
-UART_HandleTypeDef UartHandle;
-__IO ITStatus UartReady = RESET;
-
-uint8_t aTxBuffer[RXBUFFERSIZE] = " 1234567 ";
-int TxSize = 0;
-
 CWM_UART_CALLBACK UartTxCallBack = NULL;
 
-CWM_UART_LISTEN_t listen;
+#ifdef USE_UART4_PA0_PA1
+CWM_UART_LISTEN_t listen_uart4;
 
-static void Error_Handler(void);
-
-
-void CWM_UART_INIT(void)
+int CWM_UART4_LISTEN(int RxBufferSize, CWM_UART_CALLBACK pTxCallBack)
 {
-
-  /*##-1- Configure the UART peripheral ######################################*/
-  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-  /* UART configured as follows:
-      - Word Length = 8 Bits
-      - Stop Bit = One Stop bit
-      - Parity = None
-      - BaudRate = 9600 baud
-      - Hardware flow control disabled (RTS and CTS signals) */
-  UartHandle.Instance        = USARTx;
-
-  UartHandle.Init.BaudRate   = 9600;
-  UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-  UartHandle.Init.StopBits   = UART_STOPBITS_1;
-  UartHandle.Init.Parity     = UART_PARITY_NONE;
-  UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-  UartHandle.Init.Mode       = UART_MODE_TX_RX;
-  if(HAL_UART_DeInit(&UartHandle) != HAL_OK)
-  {
-    Error_Handler();
-  }  
-  if(HAL_UART_Init(&UartHandle) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  CWM_UART_QUEUE_INIT();
-
+    if(listen_uart4.status == 0)
+    {
+        listen_uart4.status = 1;
+        listen_uart4.size = RxBufferSize;
+        listen_uart4.callBack = pTxCallBack;
+        return CWM_UART4_READ(listen_uart4.RxBuffer, listen_uart4.size);
+    }
+    return CWM_ERROR_ALREADY_INITIAL;
 }
-
-
-int CWM_UADR_READ(uint8_t * RxBuffer, int RxBufferSize, CWM_UART_CALLBACK pRxCallBack)
-{
-    HAL_StatusTypeDef status;
-    listen.size = RxBufferSize;
-    
-    status = HAL_UART_Receive_DMA(&UartHandle, listen.RxBuffer, listen.size);
-    return status;
-}
-
-int CWM_UADR_READ1(void)
-{
-    return HAL_UART_Receive_DMA(&UartHandle, listen.RxBuffer, listen.size);
-}
-
-
-int CWM_UADR_WRITE(uint8_t * TxBuffer, int TxBufferSize, CWM_UART_CALLBACK pTxCallBack )
-{
-    HAL_StatusTypeDef status;
-    if(RXBUFFERSIZE <= TxBufferSize)
-        return -1;
-        
-    UartTxCallBack = pTxCallBack;
-    TxSize = TxBufferSize;
-
-    memcpy(aTxBuffer, TxBuffer, TxBufferSize);
-    
-    status = HAL_UART_Transmit_DMA(&UartHandle, (uint8_t*)aTxBuffer, TxBufferSize);
-    return status;
-}
-
-int CWM_UART_LISTEN(int RxBufferSize, CWM_UART_CALLBACK pTxCallBack)
-{
-    HAL_StatusTypeDef status;
-
-    listen.status = 1;
-    listen.size = RxBufferSize;
-    listen.callBack = pTxCallBack;
-    
-    status = HAL_UART_Receive_DMA(&UartHandle, listen.RxBuffer, listen.size);
-    
-    return status;
-}
-
-
+#endif
 
 /**
   * @brief  Tx Transfer completed callback
@@ -108,12 +37,9 @@ int CWM_UART_LISTEN(int RxBufferSize, CWM_UART_CALLBACK pTxCallBack)
   *         you can add your own implementation. 
   * @retval None
   */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-  /* Set transmission flag: trasfer complete*/
-    
-    if(UartTxCallBack != NULL)
-        UartTxCallBack(aTxBuffer, TxSize);
+
 }
 
 /**
@@ -123,59 +49,115 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
   *         you can add your own implementation.
   * @retval None
   */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    /* Set transmission flag: trasfer complete*/
-    if(listen.status)
+#ifdef USE_UART4_PA0_PA1
+    if(huart->Instance == CWM_UART4)
     {
-        listen.errCode = 0;
-        if(listen.callBack != NULL)
-            listen.callBack(listen.RxBuffer, listen.size);
-        
-        CWM_UADR_READ1();
-        CWM_UART_QUEUE_SET(listen.RxBuffer, listen.size);
-        
-        CWM_CMD_t data;
-        data.cmd = CWM_CMD_UART_LISTEN_RX_UPDATE;
-        CWM_MSG_QUEUE_SEND(&data);
+        /* Set transmission flag: trasfer complete*/
+        if(listen_uart4.status)
+        {
+            listen_uart4.errCode = 0;
+            if(listen_uart4.callBack != NULL)
+                listen_uart4.callBack(listen_uart4.RxBuffer, listen_uart4.size);
+            
+            CWM_UART4_READ(listen_uart4.RxBuffer, listen_uart4.size);
+            CWM_UART_QUEUE_SET(listen_uart4.RxBuffer, listen_uart4.size);
+            
+            CWM_CMD_t data;
+            data.cmd = CWM_CMD_UART_LISTEN_RX_UPDATE;
+            CWM_MSG_QUEUE_SEND(&data);
+        }
     }
+#endif
 }
 
 /**
   * @brief  UART error callbacks
-  * @param  UartHandle: UART handle
+  * @param  huart: UART handle
   * @note   This example shows a simple way to report transfer error, and you can
   *         add your own implementation.
   * @retval None
   */
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-    //Error_Handler();
-    if(listen.status)
+#ifdef USE_UART4_PA0_PA1
+    if(huart->Instance == CWM_UART4)
     {
-        listen.errCode = -1;
-        if(listen.callBack != NULL)
-            listen.callBack(listen.RxBuffer, -1);
-        
-        CWM_UADR_READ1();
-    }
-}
+        if(listen_uart4.status)
+        {
+            listen_uart4.errCode = -1;
+            if(listen_uart4.callBack != NULL)
+                listen_uart4.callBack(listen_uart4.RxBuffer, -1);
 
-int CWM_UART_QUEUE_SET(uint8_t *data, int size);
-int CWM_UART_QUEUE_GET(uint8_t *data, int size);
-int CWM_UART_QUEUE_GET_COUNT(void);
+            
+            CWM_UART4_READ(listen_uart4.RxBuffer, listen_uart4.size);
+        }
+    }
+#endif
+}
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
+  * @brief UART MSP Initialization 
+  *        This function configures the hardware resources used in this example: 
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration  
+  *           - DMA configuration for transmission request by peripheral 
+  *           - NVIC configuration for DMA interrupt request enable
+  * @param huart: UART handle pointer
   * @retval None
   */
-static void Error_Handler(void)
+void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-  /* LED2 is slowly blinking (1 sec. period) */
-  while(1)
-  {    
-    BSP_LED_Toggle(LED2); 
-    HAL_Delay(1000);
-  } 
+#ifdef USE_UART4_PA0_PA1
+    if(huart->Instance == CWM_UART4)
+        HAL_UART_MspInit_UART4_PA0_PA1(huart);
+#endif
+
 }
+
+/**
+  * @brief UART MSP De-Initialization
+  *        This function frees the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  *          - Revert GPIO, DMA and NVIC configuration to their default state
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+
+
+void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
+{
+#ifdef USE_UART4_PA0_PA1
+    if(huart->Instance == CWM_UART4)
+        HAL_UART_MspDeInit_UART4_PA0_PA1(huart);
+#endif
+
+}
+
+static void evtcb_CWM_CMD_UART_LISTEN(void *handle, void *evtData)
+{
+#ifdef USE_UART4_PA0_PA1
+    CWM_UART4_LISTEN(64, NULL);
+#endif
+}
+void CWM_UART_EVENT_REGISTER(void)
+{
+    /*Uart cmd: listen register*/
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_UART_LISTEN, NULL, evtcb_CWM_CMD_UART_LISTEN);
+}
+
+void CWM_UART_INIT(void)
+{
+    /*Uart info queue*/
+    CWM_UART_QUEUE_INIT();
+
+    /*Event listen register*/
+    CWM_UART_EVENT_REGISTER();
+
+#ifdef USE_UART4_PA0_PA1
+    CWM_UART_INIT_UART4_PA0_PA1();
+#endif
+
+}
+
