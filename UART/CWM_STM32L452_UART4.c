@@ -111,90 +111,93 @@ void CWM_UART4_IRQHandler(void)
   */
 void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
 {
-  static DMA_HandleTypeDef hdma_tx;
-  static DMA_HandleTypeDef hdma_rx;
+    static DMA_HandleTypeDef hdma_tx;
+    static DMA_HandleTypeDef hdma_rx;
   
-  GPIO_InitTypeDef  GPIO_InitStruct;
+    GPIO_InitTypeDef  GPIO_InitStruct;
+    if(huart->Instance == UART4)
+    {
   
-  /*##-1- Enable peripherals and GPIO Clocks #################################*/
-  /* Enable GPIO TX/RX clock */
-  CWM_UART4_TX_GPIO_CLK_ENABLE();
-  CWM_UART4_RX_GPIO_CLK_ENABLE();
+        /*##-1- Enable peripherals and GPIO Clocks #################################*/
+        /* Enable GPIO TX/RX clock */
+        CWM_UART4_TX_GPIO_CLK_ENABLE();
+        CWM_UART4_RX_GPIO_CLK_ENABLE();
 
 
-  /* Enable USARTx clock */
-  CWM_UART4_CLK_ENABLE();
+        /* Enable USARTx clock */
+        CWM_UART4_CLK_ENABLE();
 
-  /* Enable DMA clock */
-  DMAx_CLK_ENABLE();
-  
-  /*##-2- Configure peripheral GPIO ##########################################*/  
-  /* UART TX GPIO pin configuration  */
-  GPIO_InitStruct.Pin       = CWM_UART4_TX_PIN;
-  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull      = GPIO_PULLUP;
-  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.Alternate = CWM_UART4_TX_AF;
+        /* Enable DMA clock */
+        DMAx_CLK_ENABLE();
 
-  HAL_GPIO_Init(CWM_UART4_TX_GPIO_PORT, &GPIO_InitStruct);
+        /*##-2- Configure peripheral GPIO ##########################################*/  
+        /* UART TX GPIO pin configuration  */
+        GPIO_InitStruct.Pin       = CWM_UART4_TX_PIN;
+        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull      = GPIO_PULLUP;
+        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+        GPIO_InitStruct.Alternate = CWM_UART4_TX_AF;
 
-  /* UART RX GPIO pin configuration  */
-  GPIO_InitStruct.Pin = CWM_UART4_RX_PIN;
-  GPIO_InitStruct.Alternate = CWM_UART4_RX_AF;
+        HAL_GPIO_Init(CWM_UART4_TX_GPIO_PORT, &GPIO_InitStruct);
 
-  HAL_GPIO_Init(CWM_UART4_RX_GPIO_PORT, &GPIO_InitStruct);
+        /* UART RX GPIO pin configuration  */
+        GPIO_InitStruct.Pin = CWM_UART4_RX_PIN;
+        GPIO_InitStruct.Alternate = CWM_UART4_RX_AF;
 
-  /*##-3- Configure the DMA ##################################################*/
-  /* Configure the DMA handler for Transmission process */
-  hdma_tx.Instance                 = CWM_UART4_TX_DMA_CHANNEL;
-  hdma_tx.Init.Direction           = DMA_MEMORY_TO_PERIPH;
-  hdma_tx.Init.PeriphInc           = DMA_PINC_DISABLE;
-  hdma_tx.Init.MemInc              = DMA_MINC_ENABLE;
-  hdma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-  hdma_tx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
-  hdma_tx.Init.Mode                = DMA_NORMAL;
-  hdma_tx.Init.Priority            = DMA_PRIORITY_LOW;
-  hdma_tx.Init.Request             = CWM_UART4_TX_DMA_REQUEST;
+        HAL_GPIO_Init(CWM_UART4_RX_GPIO_PORT, &GPIO_InitStruct);
 
-  HAL_DMA_Init(&hdma_tx);
+        /*##-3- Configure the DMA ##################################################*/
+        /* Configure the DMA handler for Transmission process */
+        hdma_tx.Instance                 = CWM_UART4_TX_DMA_CHANNEL;
+        hdma_tx.Init.Direction           = DMA_MEMORY_TO_PERIPH;
+        hdma_tx.Init.PeriphInc           = DMA_PINC_DISABLE;
+        hdma_tx.Init.MemInc              = DMA_MINC_ENABLE;
+        hdma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hdma_tx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+        hdma_tx.Init.Mode                = DMA_NORMAL;
+        hdma_tx.Init.Priority            = DMA_PRIORITY_LOW;
+        hdma_tx.Init.Request             = CWM_UART4_TX_DMA_REQUEST;
 
-  /* Associate the initialized DMA handle to the UART handle */
-  __HAL_LINKDMA(huart, hdmatx, hdma_tx);
+        HAL_DMA_Init(&hdma_tx);
 
-  /* Configure the DMA handler for reception process */
-  hdma_rx.Instance                 = CWM_UART4_RX_DMA_CHANNEL;
-  hdma_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
-  hdma_rx.Init.PeriphInc           = DMA_PINC_DISABLE;
-  hdma_rx.Init.MemInc              = DMA_MINC_ENABLE;
-  hdma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-  hdma_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
-  hdma_rx.Init.Mode                = DMA_NORMAL;
-  hdma_rx.Init.Priority            = DMA_PRIORITY_HIGH;
-  hdma_rx.Init.Request             = CWM_UART4_RX_DMA_REQUEST;
+        /* Associate the initialized DMA handle to the UART handle */
+        __HAL_LINKDMA(huart, hdmatx, hdma_tx);
 
-  HAL_DMA_Init(&hdma_rx);
+        /* Configure the DMA handler for reception process */
+        hdma_rx.Instance                 = CWM_UART4_RX_DMA_CHANNEL;
+        hdma_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+        hdma_rx.Init.PeriphInc           = DMA_PINC_DISABLE;
+        hdma_rx.Init.MemInc              = DMA_MINC_ENABLE;
+        hdma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+        hdma_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+        hdma_rx.Init.Mode                = DMA_NORMAL;
+        hdma_rx.Init.Priority            = DMA_PRIORITY_HIGH;
+        hdma_rx.Init.Request             = CWM_UART4_RX_DMA_REQUEST;
 
-  /* Associate the initialized DMA handle to the the UART handle */
-  __HAL_LINKDMA(huart, hdmarx, hdma_rx);
-    
-  /*##-4- Configure the NVIC for DMA #########################################*/
+        HAL_DMA_Init(&hdma_rx);
 
-  /* by Paul
-    FreeRTOS priority default setting is 80, if we setting  HAL_NVIC_SetPriority(CWM_UART4_DMA_RX_IRQn, 8, 0); 
-    ucCurrentPriority == 128 (2^8)
-    if we not set this parameter over than 80, system will block on void vPortValidateInterruptPriority( void ) function.
-  */
-  /* NVIC configuration for DMA transfer complete interrupt (UART4_TX) */
-  HAL_NVIC_SetPriority(CWM_UART4_DMA_TX_IRQn, 8, 1);
-  HAL_NVIC_EnableIRQ(CWM_UART4_DMA_TX_IRQn);
-    
-  /* NVIC configuration for DMA transfer complete interrupt (UART4_RX) */
-  HAL_NVIC_SetPriority(CWM_UART4_DMA_RX_IRQn, 8, 0);
-  HAL_NVIC_EnableIRQ(CWM_UART4_DMA_RX_IRQn);
-  
-  /* NVIC for USART, to catch the TX complete */
-  HAL_NVIC_SetPriority(CWM_UART4_IRQn, 8, 1);
-  HAL_NVIC_EnableIRQ(CWM_UART4_IRQn);
+        /* Associate the initialized DMA handle to the the UART handle */
+        __HAL_LINKDMA(huart, hdmarx, hdma_rx);
+
+        /*##-4- Configure the NVIC for DMA #########################################*/
+
+        /* by Paul
+        FreeRTOS priority default setting is 80, if we setting  HAL_NVIC_SetPriority(CWM_UART4_DMA_RX_IRQn, 8, 0); 
+        ucCurrentPriority == 128 (2^8)
+        if we not set this parameter over than 80, system will block on void vPortValidateInterruptPriority( void ) function.
+        */
+        /* NVIC configuration for DMA transfer complete interrupt (UART4_TX) */
+        HAL_NVIC_SetPriority(CWM_UART4_DMA_TX_IRQn, 8, 1);
+        HAL_NVIC_EnableIRQ(CWM_UART4_DMA_TX_IRQn);
+
+        /* NVIC configuration for DMA transfer complete interrupt (UART4_RX) */
+        HAL_NVIC_SetPriority(CWM_UART4_DMA_RX_IRQn, 8, 0);
+        HAL_NVIC_EnableIRQ(CWM_UART4_DMA_RX_IRQn);
+
+        /* NVIC for USART, to catch the TX complete */
+        HAL_NVIC_SetPriority(CWM_UART4_IRQn, 8, 1);
+        HAL_NVIC_EnableIRQ(CWM_UART4_IRQn);
+    }
 }
 
 /**
@@ -208,32 +211,34 @@ void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
 
 void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
 {
-    
-    /*##-1- Reset peripherals ##################################################*/
-    CWM_UART4_FORCE_RESET();
-    CWM_UART4_RELEASE_RESET();
-
-    /*##-2- Disable peripherals and GPIO Clocks #################################*/
-    /* Configure USARTx Tx as alternate function  */
-    HAL_GPIO_DeInit(CWM_UART4_TX_GPIO_PORT, CWM_UART4_TX_PIN);
-    /* Configure USARTx Rx as alternate function  */
-    HAL_GPIO_DeInit(CWM_UART4_RX_GPIO_PORT, CWM_UART4_RX_PIN);
-
-    /*##-3- Disable the DMA #####################################################*/
-    /* De-Initialize the DMA channel associated to reception process */
-    if(huart->hdmarx != 0)
+    if(huart->Instance == UART4)
     {
-        HAL_DMA_DeInit(huart->hdmarx);
-    }
-    /* De-Initialize the DMA channel associated to transmission process */
-    if(huart->hdmatx != 0)
-    {
-        HAL_DMA_DeInit(huart->hdmatx);
+        /*##-1- Reset peripherals ##################################################*/
+        CWM_UART4_FORCE_RESET();
+        CWM_UART4_RELEASE_RESET();
+
+        /*##-2- Disable peripherals and GPIO Clocks #################################*/
+        /* Configure USARTx Tx as alternate function  */
+        HAL_GPIO_DeInit(CWM_UART4_TX_GPIO_PORT, CWM_UART4_TX_PIN);
+        /* Configure USARTx Rx as alternate function  */
+        HAL_GPIO_DeInit(CWM_UART4_RX_GPIO_PORT, CWM_UART4_RX_PIN);
+
+        /*##-3- Disable the DMA #####################################################*/
+        /* De-Initialize the DMA channel associated to reception process */
+        if(huart->hdmarx != 0)
+        {
+            HAL_DMA_DeInit(huart->hdmarx);
+        }
+        /* De-Initialize the DMA channel associated to transmission process */
+        if(huart->hdmatx != 0)
+        {
+            HAL_DMA_DeInit(huart->hdmatx);
+        }  
+
+        /*##-4- Disable the NVIC for DMA ###########################################*/
+        HAL_NVIC_DisableIRQ(CWM_UART4_DMA_TX_IRQn);
+        HAL_NVIC_DisableIRQ(CWM_UART4_DMA_RX_IRQn);
     }  
-
-    /*##-4- Disable the NVIC for DMA ###########################################*/
-    HAL_NVIC_DisableIRQ(CWM_UART4_DMA_TX_IRQn);
-    HAL_NVIC_DisableIRQ(CWM_UART4_DMA_RX_IRQn);
 }
 
 void CWM_UART_INIT_UART4_PA0_PA1(void)

@@ -1,9 +1,11 @@
 
 #include "CWM_STM32L452_UART.h"
 #include "CWM_STM32L452_UART4.h"
+#include "CWM_STM32L452_USART3_PB4_PB5.h"
 #include "CWM_UART_QUEUE.h"
 #include "CWM_MSG_QUEUE.h"
 
+#ifdef USE_UART
 /* Size of Reception buffer */
 #define MAX_RXBUFFERSIZE                      128
 
@@ -113,8 +115,10 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == UART4)
         HAL_UART_MspInit_UART4_PA0_PA1(huart);
+#endif
+#ifdef USE_USART3_PB4_PB5
+    HAL_UART_MspInit_USART3_PB4_PB5(huart);
 #endif
 
 }
@@ -132,10 +136,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == UART4)
-        HAL_UART_MspDeInit_UART4_PA0_PA1(huart);
+    HAL_UART_MspDeInit_UART4_PA0_PA1(huart);
 #endif
 
+#ifdef USE_USART3_PB4_PB5
+    HAL_UART_MspDeInit_USART3_PB4_PB5(huart);
+#endif
 }
 
 static void evtcb_CWM_CMD_UART_LISTEN(void *handle, void *evtData)
@@ -162,5 +168,15 @@ void CWM_UART_INIT(void)
     CWM_UART_INIT_UART4_PA0_PA1();
 #endif
 
+#ifdef USE_USART3_PB4_PB5
+    CWM_UART_INIT_USART3_PB4_PB5();
+#endif
+
+
 }
+#else
+void CWM_UART_INIT(void)
+{
+}
+#endif
 

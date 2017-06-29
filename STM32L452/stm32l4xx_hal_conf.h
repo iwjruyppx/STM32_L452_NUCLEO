@@ -43,6 +43,9 @@
  extern "C" {
 #endif
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
@@ -81,8 +84,12 @@
 /* #define HAL_SPI_MODULE_ENABLED */
 #define HAL_TIM_MODULE_ENABLED
 /* #define HAL_TSC_MODULE_ENABLED */
+#ifdef USE_UART
 #define HAL_UART_MODULE_ENABLED
+#endif
+#ifdef USE_USART
 #define HAL_USART_MODULE_ENABLED
+#endif
 /* #define HAL_WWDG_MODULE_ENABLED */
 
 

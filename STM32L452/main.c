@@ -40,13 +40,16 @@ static void PLATFORM_INIT(void)
     /* Configure LED2 */
     BSP_LED_Init(LED2);
 
+    /* UART Init*/
+    CWM_UART_INIT();
+    
     /* I2C Init*/
     CWM_I2C_INIT();
 
     CWM_SCREEN_INIT();
     CWM_GPS_INIT();
-    /* LPUART Init*/
-    CWM_UART_INIT();
+    
+    
     CWM_TIMER_INIT();
   
 }

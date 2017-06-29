@@ -193,18 +193,4 @@ void I2Cx_DMA_TX_IRQHandler(void)
   HAL_DMA_IRQHandler(I2cHandle.hdmatx);
 }
 
-
-/**
-* @brief  This function handles DMA interrupt request.
-* @param  None
-* @retval None
-*/
-
-void TIMx_DMA_IRQHandler(void);
-void TIMx_DMA_IRQHandler(void)
-{
-  HAL_DMA_IRQHandler(CWMTimHandle.hdma[TIM_DMA_ID_CC3]);
-}
-
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -35,8 +35,8 @@
 
     extern TIM_HandleTypeDef    CWMTimHandle;
 
-    void CWM_TIMER_INIT(void);
 #endif  //USE_TIMER_PWM_PULSE
 
+void CWM_TIMER_INIT(void);
 
 #endif /* __CWM_STM32L452_I2C_H */
