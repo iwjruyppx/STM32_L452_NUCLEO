@@ -58,16 +58,16 @@
 
 /* Definition for I2Cx's DMA */
 #define I2Cx_DMA                        DMA1   
-#define I2Cx_DMA_INSTANCE_TX            DMA1_Channel2
-#define I2Cx_DMA_INSTANCE_RX            DMA1_Channel3
+#define I2Cx_DMA_INSTANCE_TX            DMA1_Channel6
+#define I2Cx_DMA_INSTANCE_RX            DMA1_Channel7
 #define I2Cx_DMA_REQUEST_TX             DMA_REQUEST_3
 #define I2Cx_DMA_REQUEST_RX             DMA_REQUEST_3
 
 /* Definition for I2Cx's DMA NVIC */
-#define I2Cx_DMA_TX_IRQn                DMA1_Channel2_IRQn
-#define I2Cx_DMA_RX_IRQn                DMA1_Channel3_IRQn
-#define I2Cx_DMA_TX_IRQHandler          DMA1_Channel2_IRQHandler
-#define I2Cx_DMA_RX_IRQHandler          DMA1_Channel3_IRQHandler
+#define I2Cx_DMA_TX_IRQn                DMA1_Channel6_IRQn
+#define I2Cx_DMA_RX_IRQn                DMA1_Channel7_IRQn
+#define I2Cx_DMA_TX_IRQHandler          DMA1_Channel6_IRQHandler
+#define I2Cx_DMA_RX_IRQHandler          DMA1_Channel7_IRQHandler
 
 extern I2C_HandleTypeDef I2cHandle;
 
