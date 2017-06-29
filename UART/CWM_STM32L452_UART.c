@@ -14,15 +14,15 @@ typedef struct {
     int size;
     int errCode;
     uint8_t RxBuffer[MAX_RXBUFFERSIZE];
-    CWM_UART_CALLBACK callBack;
+    CWM_STRING_CALLBACK callBack;
 }CWM_UART_LISTEN_t, *pCWM_UART_LISTEN_t;
 
-CWM_UART_CALLBACK UartTxCallBack = NULL;
+CWM_STRING_CALLBACK UartTxCallBack = NULL;
 
 #ifdef USE_UART4_PA0_PA1
 CWM_UART_LISTEN_t listen_uart4;
 
-int CWM_UART4_LISTEN(int RxBufferSize, CWM_UART_CALLBACK pTxCallBack)
+int CWM_UART4_LISTEN(int RxBufferSize, CWM_STRING_CALLBACK pTxCallBack)
 {
     if(listen_uart4.status == 0)
     {
@@ -54,6 +54,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
   *         you can add your own implementation.
   * @retval None
   */
+uint8_t text1RxBuffer[255] ;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
@@ -75,6 +76,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         }
     }
 #endif
+    if(huart->Instance == USART3)
+    {
+        CWM_USART3_READ(text1RxBuffer, 32);
+    }
+}
+
+void HAL_UART_RxCpltEntryCallback(UART_HandleTypeDef *huart)
+{
+    if(huart->Instance == USART3)
+    {
+    }
 }
 
 /**
@@ -100,6 +112,10 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
         }
     }
 #endif
+    if(huart->Instance == USART3)
+    {
+        CWM_USART3_READ(text1RxBuffer, 32);
+    }
 }
 
 /**
@@ -170,6 +186,7 @@ void CWM_UART_INIT(void)
 
 #ifdef USE_USART3_PB4_PB5
     CWM_UART_INIT_USART3_PB4_PB5();
+
 #endif
 
 

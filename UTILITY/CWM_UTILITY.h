@@ -8,6 +8,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdarg.h>
 /* Compiler includes. */
 #include <intrinsics.h>
 

@@ -8,7 +8,7 @@ typedef void (*CWM_FREE)(void *);
 typedef void (*CWM_CALLBACK)(void *);
 typedef void (*CWM_EVT_CALLBACK)(void *, void *);
 typedef int(*CWM_INFO_CALLBACK)(int ,void *);
-typedef int(*CWM_UART_CALLBACK)(uint8_t *,int);
+typedef int(*CWM_STRING_CALLBACK)(uint8_t *,int);
 
 
 typedef struct {
