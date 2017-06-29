@@ -317,6 +317,7 @@ void TM_SSD1306_DrawCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t c)
  */
 void TM_SSD1306_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t c);
 
+void TM_SSD1306_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, SSD1306_COLOR_t color);
 
 char CWM_SSD1306_Puts_Auto_newLine(char* str, TM_FontDef_t* Font, SSD1306_COLOR_t color) ;
 void TM_SSD1306_ScreenClean(void);

@@ -483,7 +483,7 @@ static void CWM_SET_SSD1306_SCREEN_MEMORY(int x, int y8, uint8_t data)
     SSD1306.SSD1306_Buffer[x + (y8 * SSD1306_WIDTH)] = data;
 }
 
-void CWM_SSD1306_SHIFT_PIXEL(int shift_y){
+static void CWM_SSD1306_SHIFT_PIXEL(int shift_y){
     uint8_t data;
     int shift_byte = shift_y / 8;
     int shift_bit = shift_y % 8;

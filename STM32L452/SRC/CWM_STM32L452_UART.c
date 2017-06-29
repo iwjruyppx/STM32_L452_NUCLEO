@@ -166,7 +166,8 @@ static void evtcb_CWM_CMD_UART_LISTEN(void *handle, void *evtData)
     CWM_UART4_LISTEN(64, NULL);
 #endif
 }
-void CWM_UART_EVENT_REGISTER(void)
+
+static void CWM_UART_EVENT_REGISTER(void)
 {
     /*Uart cmd: listen register*/
     CWM_MSG_QUEUE_REGISTERED(CWM_CMD_UART_LISTEN, NULL, evtcb_CWM_CMD_UART_LISTEN);
