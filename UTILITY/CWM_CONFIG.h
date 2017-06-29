@@ -2,7 +2,12 @@
 #define __CWM_CONFIG_H
 
 /*Timer*/
-//#define USE_TIMER_PWM_PULSE
+#define USE_TIMER
+
+#ifdef USE_TIMER
+    #define USE_TIMER3
+    //#define USE_TIMER_PWM_PULSE
+#endif
 
 /*I2C*/
 #define USE_I2C

@@ -49,7 +49,6 @@ static void PLATFORM_INIT(void)
     CWM_SCREEN_INIT();
     CWM_GPS_INIT();
     
-    
     CWM_TIMER_INIT();
   
 }
