@@ -35,6 +35,11 @@
 extern "C" {
 #endif
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+#ifdef USE_OLED_DRIVER_SSD1306
+
 /**
  * @addtogroup TM_STM32F4xx_Libraries
  * @{
@@ -336,6 +341,8 @@ void SSD1306_OFF(void);
 /**
  * @}
  */
+
+#endif /*USE_OLED_DRIVER_SSD1306*/
 
 /* C++ detection */
 #ifdef __cplusplus

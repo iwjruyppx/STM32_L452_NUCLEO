@@ -2,13 +2,9 @@
 #ifndef __CWM_GPS_PASSER_H
 #define __CWM_GPS_PASSER_H
 
-#include <stdio.h>
-#include <stdint.h>
-#include <errno.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
+#include "CWM_UTILITY.h"
 
+#ifdef USE_GPS_PASSER
 /**
  * GGA - Global Positioning System Fixed Data.
  *
@@ -153,5 +149,6 @@ void CWM_GPS_PASSER_INIT(gps_callback_t *cb_funcs);
 
 int CWM_GPS_DATA_PASSER_PROCESS(void);
 
+#endif /*USE_GPS_PASSER*/
 #endif /* __CWM_GPS_PASSER_H */
 

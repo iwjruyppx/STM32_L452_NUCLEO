@@ -37,12 +37,12 @@ static void statemachine(void)
             data.cmd = CWM_CMD_SCREEN_ON;
             CWM_CMD_QUEUE_SEND(&data);
             
-            data.cmd = CWM_CMD_UART_LISTEN;
+            data.cmd = CWM_CMD_USART_LISTEN;
             CWM_CMD_QUEUE_SEND(&data);
             break;
 #else
         case 0 :
-            data.cmd = CWM_CMD_UART_LISTEN;
+            data.cmd = CWM_CMD_USART_LISTEN;
             CWM_CMD_QUEUE_SEND(&data);
             break;
             

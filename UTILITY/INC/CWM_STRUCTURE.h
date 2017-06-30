@@ -10,15 +10,20 @@ typedef void (*CWM_EVT_CALLBACK)(void *, void *);
 typedef int(*CWM_INFO_CALLBACK)(int ,void *);
 typedef int(*CWM_STRING_CALLBACK)(uint8_t *,int);
 
+#define MAX_CWM_CMD_DATA_SIZE 32
 
 typedef struct {
     int cmd;
     union {
         struct  {
-            float data[3];
+            float data[MAX_CWM_CMD_DATA_SIZE/4];
             };
         struct  {
-            char string[32];
+            char string[MAX_CWM_CMD_DATA_SIZE];
+            };
+        struct  {
+            int type;
+            int device;
             };
     };
 }CWM_CMD_t, *pCWM_CMD_t;

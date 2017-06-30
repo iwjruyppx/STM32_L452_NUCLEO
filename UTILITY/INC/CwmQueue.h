@@ -3,6 +3,7 @@
 
 #include "CWM_UTILITY.h"
 
+#ifdef USE_CWM_QUEUE
 typedef struct QueueDefinition
 {
 volatile int front;
@@ -26,5 +27,7 @@ int CwmQueueSendToBackFromISR(pCwmQueue_t ptr,void *data);
 int CwmQueueReceive(pCwmQueue_t ptr,void *data);
 int CwmQueueReceiveFromISR(pCwmQueue_t ptr,void *data);
 int CwmQueueReset(pCwmQueue_t ptr);
+
+#endif /*USE_CWM_QUEUE*/
 
 #endif /* __CwmQueue_H__ */

@@ -4,6 +4,7 @@
 
 #include "CWM_UTILITY.h"
 
+#ifdef USE_LINK_LIST_TEMPLATE
 typedef struct {
     uint32_t evtHandle;
     void *evtData;
@@ -36,4 +37,5 @@ typedef struct LinkListH_t{
 
 void CWM_LINK_LIST_INIT(pLinkListHandle_t Handle);
 
+#endif /*USE_LINK_LIST_TEMPLATE*/
 #endif /* __CWM_LINK_LIST_TEMPLATE_H */

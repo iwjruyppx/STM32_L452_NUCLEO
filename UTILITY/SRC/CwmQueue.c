@@ -1,5 +1,7 @@
 #include "CwmQueue.h"
 
+#ifdef USE_CWM_QUEUE
+
 __weak void IRQ_ENABLE(void);
 __weak void IRQ_DISABLE(void);
 
@@ -153,4 +155,4 @@ int CwmQueueReset(pCwmQueue_t ptr)
 	return CwmQueueSuccess;
 }
 
-/************************************************************************/
+#endif /*USE_CWM_QUEUE*/

@@ -1,5 +1,6 @@
 
 #include "CWM_GPS.h"
+#include "CWM_STM32L452_UART.h"
 
 #include "CWM_MSG_QUEUE.h"
 #include "CWM_UART_QUEUE.h"
@@ -7,14 +8,6 @@
 static gps_callback_t gps_cb_funcs;
 
 static CWM_GPS_INFO GPS_INFO;
-
-static int get_buff_string(void)
-{
-    uint8_t data;
-    if(CWM_UART_QUEUE_GET(&data, 1))
-        return -1;
-    return data;
-}
 
 static void GPS_LOG_LISTEN(char *str)
 {
@@ -44,10 +37,10 @@ static void evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE(void *handle, void *evtData)
 void CWM_GPS_INIT(void)
 {
     /*GPS event listen register*/
-    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_UART_LISTEN_RX_UPDATE, NULL, evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE);
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_UART4_RX_UPDATE, NULL, evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE);
 
     /*GPS passer register*/
-    gps_cb_funcs.cbfunc_GetNMEAString = get_buff_string;
+    gps_cb_funcs.cbfunc_GetNMEAString = GET_GPS_UART_STRING;
     gps_cb_funcs.cbfunc_log = GPS_LOG_LISTEN;
     gps_cb_funcs.cbfunc_gga = GPS_GGA_LISTEN;
     gps_cb_funcs.cbfunc_gsa = GPS_GSA_LISTEN;

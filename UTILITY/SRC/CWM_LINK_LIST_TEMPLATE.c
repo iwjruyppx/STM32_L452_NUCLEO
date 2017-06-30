@@ -1,6 +1,8 @@
 
 #include "CWM_LINK_LIST_TEMPLATE.h"
 
+#ifdef USE_LINK_LIST_TEMPLATE
+
 static int CWM_LINK_LIST_ADD_TO_HEAD(pLinkListHandle_t Handle, pLinkListData_t pLinkLiskdata)
 {
     pLinkList_t ptr = NULL;
@@ -175,3 +177,5 @@ void CWM_LINK_LIST_INIT(pLinkListHandle_t Handle)
     Handle->FindAndCallBack = CWM_LINK_LIST_SEARCH_AND_CALLBACK;
     Handle->Remove = CWM_LINK_LIST_REMOVE;
 }
+
+#endif /*USE_LINK_LIST_TEMPLATE*/

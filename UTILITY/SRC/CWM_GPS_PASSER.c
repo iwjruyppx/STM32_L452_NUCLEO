@@ -1,6 +1,7 @@
 
 #include "CWM_GPS_PASSER.h"
 
+#ifdef USE_GPS_PASSER
 #define PARAM_TXTMAXLEN   64
 #define PARAM_ARRAYSIZE   64
 #define DATABUFSIZ  128
@@ -299,8 +300,6 @@ static int CWM_GPS_CHECKSUM_VERIFY(char *src)
     return 0;
 }
 
-int GPGGA;
-
 static int CMW_GPS_PASSER(char *src)
 {
     char *p = src;
@@ -310,7 +309,6 @@ static int CMW_GPS_PASSER(char *src)
     if ((p = parse(p, des, sizeof(des), ",*")) != NULL) {
         if (strcmp(des, "$GPGGA") == 0) {
             res = parseAndCallbackGGA(src, CWMcbfuncs);
-            GPGGA = res;
         } else if (strcmp(des, "$GPGSA") == 0) {
             res = parseAndCallbackGSA(src, CWMcbfuncs);
         } else if (strcmp(des, "$GPRMC") == 0) {
@@ -352,3 +350,4 @@ int CWM_GPS_DATA_PASSER_PROCESS(void)
     return 0;
 }
 
+#endif /*USE_GPS_PASSER*/

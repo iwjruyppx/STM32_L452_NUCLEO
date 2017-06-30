@@ -4,13 +4,16 @@
 
 #include "CWM_UTILITY.h"
 
+#ifdef USE_LOG_STRING_PASSER_TEMPLATE
+
 typedef struct LogStrPaserH_t{
     int (*LOGE)(struct LogStrPaserH_t *, const char * ,...);
     /*User need to implement this API*/
-    CWM_STRING_CALLBACK LOGE_CallBack;
+    int (*LOGE_CallBack)(uint8_t *,int);
     /*User need to implement this API End*/
 } LogStrPaserHandle_t, *pLogStrPaserHandle_t;
 
 void CWM_LOG_STRING_PASER_INIT(pLogStrPaserHandle_t Handle);
 
+#endif /*USE_LOG_STRING_PASSER_TEMPLATE*/
 #endif /* __CWM_LOG_STRING_PASER_TEMPLATE_H */

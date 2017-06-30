@@ -18,6 +18,8 @@
  */
 #include "tm_stm32f4_ssd1306.h"
 
+#ifdef USE_OLED_DRIVER_SSD1306
+
 /* Absolute value */
 #define ABS(x)   ((x) > 0 ? (x) : -(x))
 
@@ -556,3 +558,5 @@ void SSD1306_OFF(void) {
 	SSD1306_WRITECOMMAND(0x10);
 	SSD1306_WRITECOMMAND(0xAE);  
 }
+
+#endif /*USE_OLED_DRIVER_SSD1306*/
