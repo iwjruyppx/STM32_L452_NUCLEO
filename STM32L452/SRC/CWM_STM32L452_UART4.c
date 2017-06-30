@@ -50,16 +50,16 @@ void CWM_UART4_DMA_RX_IRQHandler(void);
 void CWM_UART4_DMA_TX_IRQHandler(void);
 void CWM_UART4_IRQHandler(void);
 
-UART_HandleTypeDef CWM_UART4_Handle;
+UART_HandleTypeDef huart4;
 
 int CWM_UART4_WRITE(uint8_t * TxBuffer, int TxBufferSize)
 {
-    return HAL_UART_Transmit_DMA(&CWM_UART4_Handle, TxBuffer, TxBufferSize);
+    return HAL_UART_Transmit_DMA(&huart4, TxBuffer, TxBufferSize);
 }
 
 int CWM_UART4_READ(uint8_t * RxBuffer, int RxBufferSize)
 {
-    return HAL_UART_Receive_DMA(&CWM_UART4_Handle, RxBuffer, RxBufferSize);
+    return HAL_UART_Receive_DMA(&huart4, RxBuffer, RxBufferSize);
 }
 
 /**
@@ -71,7 +71,7 @@ int CWM_UART4_READ(uint8_t * RxBuffer, int RxBufferSize)
   */
 void CWM_UART4_DMA_RX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(CWM_UART4_Handle.hdmarx);
+  HAL_DMA_IRQHandler(huart4.hdmarx);
 }
 
 /**
@@ -83,7 +83,7 @@ void CWM_UART4_DMA_RX_IRQHandler(void)
   */
 void CWM_UART4_DMA_TX_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(CWM_UART4_Handle.hdmatx);
+  HAL_DMA_IRQHandler(huart4.hdmatx);
 }
 
 
@@ -96,7 +96,7 @@ void CWM_UART4_DMA_TX_IRQHandler(void)
   */
 void CWM_UART4_IRQHandler(void)
 {
-  HAL_UART_IRQHandler(&CWM_UART4_Handle);
+  HAL_UART_IRQHandler(&huart4);
 }
 
 /**
@@ -241,6 +241,11 @@ void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
     }  
 }
 
+UART_HandleTypeDef *CWM_UART4_GET_HANDLE(void)
+{
+    return &huart4;
+}
+
 void CWM_UART_INIT_UART4_PA0_PA1(void)
 {
 
@@ -252,20 +257,20 @@ void CWM_UART_INIT_UART4_PA0_PA1(void)
     - Parity = None
     - BaudRate = 9600 baud
     - Hardware flow control disabled (RTS and CTS signals) */
-    CWM_UART4_Handle.Instance        = CWM_UART4;
+    huart4.Instance        = CWM_UART4;
 
-    CWM_UART4_Handle.Init.BaudRate   = 9600;
-    CWM_UART4_Handle.Init.WordLength = UART_WORDLENGTH_8B;
-    CWM_UART4_Handle.Init.StopBits   = UART_STOPBITS_1;
-    CWM_UART4_Handle.Init.Parity     = UART_PARITY_NONE;
-    CWM_UART4_Handle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-    CWM_UART4_Handle.Init.Mode       = UART_MODE_TX_RX;
+    huart4.Init.BaudRate   = 9600;
+    huart4.Init.WordLength = UART_WORDLENGTH_8B;
+    huart4.Init.StopBits   = UART_STOPBITS_1;
+    huart4.Init.Parity     = UART_PARITY_NONE;
+    huart4.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+    huart4.Init.Mode       = UART_MODE_TX_RX;
     
-    if(HAL_UART_DeInit(&CWM_UART4_Handle) != HAL_OK)
+    if(HAL_UART_DeInit(&huart4) != HAL_OK)
     {
         Error_Handler();
     }  
-    if(HAL_UART_Init(&CWM_UART4_Handle) != HAL_OK)
+    if(HAL_UART_Init(&huart4) != HAL_OK)
     {
         Error_Handler();
     }

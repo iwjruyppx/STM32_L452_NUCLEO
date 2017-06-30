@@ -9,9 +9,15 @@
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_nucleo.h"
 
+typedef enum {
+    CWM_USART1 = 0,
+    CWM_USART2,
+    CWM_USART3,
+    CWM_UART4,
+    CWM_USART_MAX,
+}CWM_UART_e;
+
+int GET_GPS_UART_STRING(void);
 void CWM_UART_INIT(void);
-int CWM_UADR_READ(uint8_t * RxBuffer, int RxBufferSize, CWM_STRING_CALLBACK pRxCallBack);
-int CWM_UADR_WRITE(uint8_t * TxBuffer, int TxBufferSize, CWM_STRING_CALLBACK pTxCallBack );
-int CWM_UART_LISTEN(int RxBufferSize, CWM_STRING_CALLBACK pTxCallBack);
 
 #endif /* __CWM_STM32L452_I2C_H */

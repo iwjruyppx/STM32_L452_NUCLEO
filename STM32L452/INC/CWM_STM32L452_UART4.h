@@ -10,6 +10,8 @@
 #include "stm32l4xx_nucleo.h"
 
 #ifdef USE_UART4_PA0_PA1
+
+UART_HandleTypeDef *CWM_UART4_GET_HANDLE(void);
 void CWM_UART_INIT_UART4_PA0_PA1(void);
 void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart);
 void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart);

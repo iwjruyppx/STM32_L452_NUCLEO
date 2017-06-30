@@ -5,7 +5,7 @@
 //#define USE_DMA
 #define USE_IT
 
-UART_HandleTypeDef huart3;
+static UART_HandleTypeDef huart3;
 
 #ifdef USE_DMA
 DMA_HandleTypeDef hdma_usart3_rx;
@@ -150,10 +150,10 @@ void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 
         /* DMA interrupt init */
         /* DMA1_Channel2_IRQn interrupt configuration */
-        HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 3);
+        HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 9, 3);
         HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
         /* DMA1_Channel3_IRQn interrupt configuration */
-        HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 2);
+        HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 9, 2);
         HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 #endif /*USE_DMA*/ 
     }
@@ -183,7 +183,11 @@ void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 
 }
 
-uint8_t textRxBuffer[255] ;
+UART_HandleTypeDef *CWM_USART3_GET_HANDLE(void)
+{
+    return &huart3;
+}
+
 void CWM_UART_INIT_USART3_PB4_PB5(void)
 {
     /*BaudRate = 9600; transmit data speed about 1000byte/s*/
@@ -202,7 +206,6 @@ void CWM_UART_INIT_USART3_PB4_PB5(void)
     {
         Error_Handler();
     }
-    CWM_USART3_READ(textRxBuffer, 32);
 }
 
 #endif

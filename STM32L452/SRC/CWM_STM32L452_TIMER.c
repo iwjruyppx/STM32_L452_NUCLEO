@@ -35,14 +35,14 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 #endif  //USE_TIMER3
 }
 
-void CWM_TIMER_REG_CALL_BACK(CWM_TIMER_u timerX, CWM_CALLBACK pcallBack)
+void CWM_TIMER_REG_CALL_BACK(CWM_TIMER_e timerX, CWM_CALLBACK pcallBack)
 {
     if(CWM_TIMER_MAX <= timerX)
         return;
     
     pfunTim[timerX]->irqCallBack = pcallBack;
 }
-pTimerClass_t CWM_GET_TIMER_ENTRY(CWM_TIMER_u timerX)
+pTimerClass_t CWM_GET_TIMER_ENTRY(CWM_TIMER_e timerX)
 {
     if(CWM_TIMER_MAX <= timerX)
         return NULL;

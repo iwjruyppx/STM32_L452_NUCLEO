@@ -10,6 +10,8 @@
 #include "stm32l4xx_nucleo.h"
 
 #ifdef USE_USART3_PB4_PB5
+
+UART_HandleTypeDef *CWM_USART3_GET_HANDLE(void);
 void CWM_UART_INIT_USART3_PB4_PB5(void);
 void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart);
 void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart);

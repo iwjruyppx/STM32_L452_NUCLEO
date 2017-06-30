@@ -52,7 +52,7 @@ static void HAL_TIM3_Base_MspInit(void* init)
         /* Peripheral clock enable */
         __HAL_RCC_TIM3_CLK_ENABLE();
         /* TIM3 interrupt Init */
-        HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+        HAL_NVIC_SetPriority(TIM3_IRQn, 9, 0);
         HAL_NVIC_EnableIRQ(TIM3_IRQn);
     }
 }
@@ -93,10 +93,17 @@ static void CWM_TIM3_INIT(void)
 
 }
 
+static void CWM_TIM3_DEINIT(void)
+{
+    if (HAL_TIM_Base_DeInit(&htim3) != HAL_OK)
+        Error_Handler();
+}
 
-static const TimerClass_t FunPointerTime3 = {
+
+
+static TimerClass_t FunPointerTime3 = {
     .init = CWM_TIM3_INIT,
-    .deInit = NULL,
+    .deInit = CWM_TIM3_DEINIT,
     .mspInit = HAL_TIM3_Base_MspInit,
     .mspDeInit = HAL_TIM3_Base_MspDeInit,
     .start = CWM_TIM3_START,
