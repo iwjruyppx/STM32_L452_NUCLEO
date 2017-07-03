@@ -13,6 +13,7 @@
 
 UART_HandleTypeDef *CWM_USART3_GET_HANDLE(void);
 void CWM_UART_INIT_USART3_PB4_PB5(void);
+void CWM_UART_DEINIT_USART3_PB4_PB5(void);
 void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart);
 void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart);
 

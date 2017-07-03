@@ -94,12 +94,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         {
             /*Send data to host*/
             data.cmd = CWM_CMD_USART3_RX_UPDATE;
-            memcpy(data.string, CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-2);
-            data.string[30] = 0x0D; /*0x0D = "\r" */
-            data.string[31] = 0x0A; /*0x0A = "\n" */
+            memcpy(data.string, CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+            data.string[MAX_CWM_CMD_DATA_SIZE -3] = 0x0D; /*0x0D = "\r" */
+            data.string[MAX_CWM_CMD_DATA_SIZE -2] = 0x0A; /*0x0A = "\n" */
+            data.string[MAX_CWM_CMD_DATA_SIZE -1] = 0x00; /*0x00 = "\0" */
             CWM_MSG_QUEUE_SEND(&data);
         
-            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-2);
+            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -154,9 +155,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
             CWM_U3.time_en = 0;
         }
         
+        HAL_UART_AbortReceive_IT(huart);
+        CWM_UART_DEINIT_USART3_PB4_PB5();
+        CWM_UART_INIT_USART3_PB4_PB5();
+        
         if(CWM_U3.status)
         {
-            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-2);
+            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -225,7 +230,7 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
         if(CWM_U3.status == 0)
         {
             CWM_U3.status = 1;
-            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-2);
+            CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -256,21 +261,22 @@ static void CWM_TIME3_IRQ_CALLBACK(void *info)
     {
         UART_HandleTypeDef *pHandle = CWM_USART3_GET_HANDLE();
         
-        UART_EndRxTransfer(pHandle);
         /*Send data to host*/
         data.cmd = CWM_CMD_USART3_RX_UPDATE;
-        for(i=pHandle->RxXferSize -1; i>pHandle->RxXferCount; i--)
+        for(i=0; i<pHandle->RxXferSize -pHandle->RxXferCount; i++)
         {
             data.string[j++] =  CWM_U3.RxBuffer[i];
         }
         data.string[j++] = 0x0D; /*0x0D = "\r" */
         data.string[j++] = 0x0A; /*0x0A = "\n" */
+        data.string[j++] = 0x00; /*0x00 = "\0" */
             
-        memcpy(data.string, CWM_U3.RxBuffer, j);
+        
+        HAL_UART_AbortReceive_IT(pHandle);
         memset(CWM_U3.RxBuffer, 0x00, MAX_CWM_CMD_DATA_SIZE);
         
         CWM_MSG_QUEUE_SEND(&data);
-        CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-2);
+        CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
     }
 
     timestamp++;
@@ -297,9 +303,13 @@ void CWM_UART_INIT(void)
 #endif /*USE_UART4_PA0_PA1*/
 
 #ifdef USE_USART3_PB4_PB5
+    UART_HandleTypeDef *pHandle;
+    float dt = 0.0f;
+
     /*Uart info queue*/
     CWM_UART_QUEUE_INIT(&CWM_U3.queue, 256);
 
+    CWM_UART_DEINIT_USART3_PB4_PB5();
     CWM_UART_INIT_USART3_PB4_PB5();
 
     /*Timer3 get entry and register callback*/
@@ -307,7 +317,20 @@ void CWM_UART_INIT(void)
     CWM_TIMER_REG_CALL_BACK(CWM_TIMER3, CWM_TIME3_IRQ_CALLBACK);
     CWM_U3.tim->deInit();
     CWM_U3.tim->init();
-    CWM_U3.tim->setPeriod(300);
+    
+    pHandle = CWM_USART3_GET_HANDLE();
+
+    /*
+        9600 1byte about 1ms
+        buff time reserve  3time, about 3ms.
+    */
+    if(pHandle->Init.BaudRate !=0)
+    {
+        dt = (9600.0f /(float)pHandle->Init.BaudRate) *3.0f;
+        CWM_U3.tim->setPeriod((dt < 1.0f) ? 1:(uint32_t)dt);
+    }
+    CWM_U3.tim->stop();
+    CWM_U3.tim->resetCount();
     
 #endif /*USE_USART3_PB4_PB5*/
 

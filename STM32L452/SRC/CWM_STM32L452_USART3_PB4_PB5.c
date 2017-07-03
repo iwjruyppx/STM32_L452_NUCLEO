@@ -193,7 +193,7 @@ void CWM_UART_INIT_USART3_PB4_PB5(void)
     /*BaudRate = 9600; transmit data speed about 1000byte/s*/
 
     huart3.Instance = USART3;
-    huart3.Init.BaudRate = 9600;
+    huart3.Init.BaudRate = 230400;
     huart3.Init.WordLength = UART_WORDLENGTH_8B;
     huart3.Init.StopBits = UART_STOPBITS_1;
     huart3.Init.Parity = UART_PARITY_NONE;
@@ -203,6 +203,26 @@ void CWM_UART_INIT_USART3_PB4_PB5(void)
     huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
     huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
     if (HAL_UART_Init(&huart3) != HAL_OK)
+    {
+        Error_Handler();
+    }
+}
+
+void CWM_UART_DEINIT_USART3_PB4_PB5(void)
+{
+    /*BaudRate = 9600; transmit data speed about 1000byte/s*/
+
+    huart3.Instance = USART3;
+    huart3.Init.BaudRate = 230400;
+    huart3.Init.WordLength = UART_WORDLENGTH_8B;
+    huart3.Init.StopBits = UART_STOPBITS_1;
+    huart3.Init.Parity = UART_PARITY_NONE;
+    huart3.Init.Mode = UART_MODE_TX_RX;
+    huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+    huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+    huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+    if (HAL_UART_DeInit(&huart3) != HAL_OK)
     {
         Error_Handler();
     }
