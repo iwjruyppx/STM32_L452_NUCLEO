@@ -213,7 +213,7 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
 {
     pCWM_CMD_t cmd = (pCWM_CMD_t)evtData;
 #ifdef USE_UART4_PA0_PA1
-    if(CWM_UART4 == cmd->device)
+    if(CWM_UART4 == cmd->type)
     {
         if(CWM_U4.status == 0)
         {
@@ -225,7 +225,7 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
 #endif /*USE_UART4_PA0_PA1*/
 
 #ifdef USE_USART3_PB4_PB5
-    if(CWM_USART3 == cmd->device)
+    if(CWM_USART3 == cmd->type)
     {
         if(CWM_U3.status == 0)
         {

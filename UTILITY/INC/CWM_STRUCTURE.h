@@ -23,7 +23,6 @@ typedef struct {
             };
         struct  {
             int type;
-            int device;
             };
     };
 }CWM_CMD_t, *pCWM_CMD_t;

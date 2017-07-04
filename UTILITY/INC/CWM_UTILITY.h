@@ -32,6 +32,7 @@
 #include "CWM_CMD.h"
 #include "CWM_STRUCTURE.h"
 #include "CWM_ERROR_CODE.h"
+#include "CWM_INTERNAL_CMD.h"
 /*********************************************************/
 /************//*Standard UTILITY/STRUCTURE/ERROR CODE */
 /*********************************************************/

@@ -8,8 +8,6 @@
 #include "CWM_STM32L452_TIMER.h"
 
 #include "CWM_SCREEN.h"
-#include "CWM_CMD_QUEUE.h"
-
 #include "CWM_TASK1.h"
 #include "CWM_TASK2.h"
 #include "CWM_GPS.h"

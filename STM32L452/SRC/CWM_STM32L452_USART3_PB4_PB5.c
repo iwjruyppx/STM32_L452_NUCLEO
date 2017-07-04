@@ -2,7 +2,7 @@
 #include "CWM_STM32L452_USART3_PB4_PB5.h"
 
 #ifdef USE_USART3_PB4_PB5
-//#define USE_DMA
+#define USE_DMA
 #define USE_IT
 
 static UART_HandleTypeDef huart3;
@@ -17,24 +17,22 @@ void DMA1_Channel3_IRQHandler(void);
 
 int CWM_USART3_WRITE(uint8_t * TxBuffer, int TxBufferSize)
 {
-#ifdef USE_DMA
+#if 1
     return HAL_UART_Transmit_DMA(&huart3, TxBuffer, TxBufferSize);
-#elif defined ( USE_IT )
-    return HAL_UART_Transmit_IT(&huart3, TxBuffer, TxBufferSize);
 #else
+    return HAL_UART_Transmit_IT(&huart3, TxBuffer, TxBufferSize);
     return HAL_UART_Transmit(&huart3, TxBuffer, TxBufferSize, 2*TxBufferSize);
-#endif /*USE_IT*/ 
+#endif
 }
 
 int CWM_USART3_READ(uint8_t * RxBuffer, int RxBufferSize)
 {
-#ifdef USE_DMA
-    return HAL_UART_Receive_DMA(&huart3, RxBuffer, RxBufferSize);
-#elif defined ( USE_IT )
+#if 1
     return HAL_UART_Receive_IT(&huart3, RxBuffer, RxBufferSize);
 #else 
+    return HAL_UART_Receive_DMA(&huart3, RxBuffer, RxBufferSize);
     return HAL_UART_Receive(&huart3, RxBuffer, RxBufferSize, 2*RxBufferSize);
-#endif /*USE_IT*/ 
+#endif 
 }
 
 void USART3_IRQHandler(void);
