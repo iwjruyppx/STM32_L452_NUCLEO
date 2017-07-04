@@ -80,6 +80,7 @@ static int MODULE_HC_06_SET_CMD(struct ModuleHc06Class *handle, HC06_CMD_e cmd, 
 void MODULE_HC_06_INIT(pModuleHc06Class_t handle)
 {
     handle->setCmd = MODULE_HC_06_SET_CMD;
+    handle->sendData= WRITE_CMD_TO_CALLBACK;
 }
 
 #endif /*USE_MODULE_BT_HC_06_SLAVE*/

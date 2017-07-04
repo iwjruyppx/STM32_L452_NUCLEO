@@ -29,6 +29,7 @@ typedef enum {
 
 typedef struct ModuleHc06Class{
     int (*setCmd)(struct ModuleHc06Class *, HC06_CMD_e, uint8_t *);
+    int (*sendData)(struct ModuleHc06Class *, const char * ,...);
     
     /*User need to implement this API*/
     int (*stringWriteCallBack)(uint8_t *,int);
