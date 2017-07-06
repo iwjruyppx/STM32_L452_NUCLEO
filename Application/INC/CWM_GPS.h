@@ -5,6 +5,8 @@
 /*Standard Utility include file*/
 #include "CWM_UTILITY.h"
 
+#ifdef USE_GPS
+
 typedef struct {
     gps_gga_t   gga;
     gps_gsa_t   gsa;
@@ -12,6 +14,7 @@ typedef struct {
     gps_rmc_t   rmc;
 }CWM_GPS_INFO, *pCWM_GPS_INFO;
 
+#endif/*USE_GPS*/
 void CWM_GPS_INIT(void);
 
 #endif /* __CWM_GPS_H */

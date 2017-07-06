@@ -5,6 +5,7 @@
 #include "CWM_MSG_QUEUE.h"
 #include "CWM_UART_QUEUE.h"
 
+#ifdef USE_GPS
 static gps_callback_t gps_cb_funcs;
 
 static CWM_GPS_INFO GPS_INFO;
@@ -49,3 +50,8 @@ void CWM_GPS_INIT(void)
     
     CWM_GPS_PASSER_INIT(&gps_cb_funcs);
 }
+#else
+void CWM_GPS_INIT(void)
+{
+}
+#endif/*USE_GPS*/

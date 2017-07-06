@@ -14,6 +14,10 @@
     mUart3Cmd.LOGE_CallBack = CWM_USART3_WRITE;
 
     WriteUart3Msg("+VERSION");
+
+#define BT_SEND(fmt, args...) \
+    if(NULL != BLE_HC06S.sendData)\
+        BLE_HC06S.sendData(&BLE_HC06S, fmt, ##args)
 */
 
 

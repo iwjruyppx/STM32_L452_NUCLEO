@@ -12,6 +12,10 @@ AT+BAUD4盢 baud rate 传 9600
 AT+BAUD5盢 baud rate 传 19200
 AT+BAUD6盢 baud rate 传 38400
 AT+BAUD7盢 baud rate 传 57600
+
+
+AT+ROLE=1
+AT+BIND=2016,5,232325
 */
 /*****************************************/
 
@@ -67,11 +71,11 @@ static int MODULE_HC_06_SET_CMD(struct ModuleHc06Class *handle, HC06_CMD_e cmd, 
         case CMD_HC06_SET_BAUD_230400:
             return WRITE_CMD_TO_CALLBACK(handle, "%s%d", HC06_SET_BAUD, 9);
         case CMD_HC06_SET_BAUD_460800:
-            return WRITE_CMD_TO_CALLBACK(handle, "%s%d", HC06_SET_BAUD, 10);
+            return WRITE_CMD_TO_CALLBACK(handle, "%sA", HC06_SET_BAUD);
         case CMD_HC06_SET_BAUD_921600:
-            return WRITE_CMD_TO_CALLBACK(handle, "%s%d", HC06_SET_BAUD, 11);
+            return WRITE_CMD_TO_CALLBACK(handle, "%sB", HC06_SET_BAUD);
         case CMD_HC06_SET_BAUD_1382400:
-            return WRITE_CMD_TO_CALLBACK(handle, "%s%d", HC06_SET_BAUD, 12);
+            return WRITE_CMD_TO_CALLBACK(handle, "%sC", HC06_SET_BAUD);
         default:
             return CWM_ERROR_CMD_NOT_FOUND;
     }
