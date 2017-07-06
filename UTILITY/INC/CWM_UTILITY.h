@@ -55,6 +55,9 @@
 /*OLED screen driver SSD1306*/
 #include "tm_stm32f4_ssd1306.h"
 
+/*OLED screen driver SH1106*/
+#include "tm_stm32f4_SH1106.h"
+
 /*Screen fonts*/
 #include "tm_stm32f4_fonts.h"
 
