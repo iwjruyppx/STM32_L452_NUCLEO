@@ -43,12 +43,8 @@ static void GPS_RMC_LISTEN(gps_rmc_t *p)
     
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_CLEAN);
     LOGE("T:%d:%d:%d,%X\n",GPS_INFO.rmc.hour,GPS_INFO.rmc.min,GPS_INFO.rmc.sec,GPS_INFO.rmc.status);
-    #if 1
     LOGE("NL:%s\n",doubleToString(GPS_INFO.rmc.nl));
     LOGE("EL:%s\n",doubleToString(GPS_INFO.rmc.el));
-    #endif
-    LOGE("EL:%s\n",doubleToString(123.000123));
-    LOGE("EL:%s\n",doubleToString(123.123));
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_UPDATE);
     
 }

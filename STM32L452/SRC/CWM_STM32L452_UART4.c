@@ -1,4 +1,5 @@
 
+#include "CWM_STM32L452_UART.h"
 #include "CWM_STM32L452_UART4.h"
 
 #ifdef USE_UART4_PA0_PA1
@@ -52,12 +53,12 @@ void CWM_UART4_IRQHandler(void);
 
 UART_HandleTypeDef huart4;
 
-int CWM_UART4_WRITE(uint8_t * TxBuffer, int TxBufferSize)
+static int CWM_UART4_WRITE(uint8_t * TxBuffer, int TxBufferSize)
 {
     return HAL_UART_Transmit_DMA(&huart4, TxBuffer, TxBufferSize);
 }
 
-int CWM_UART4_READ(uint8_t * RxBuffer, int RxBufferSize)
+static int CWM_UART4_READ(uint8_t * RxBuffer, int RxBufferSize)
 {
     return HAL_UART_Receive_DMA(&huart4, RxBuffer, RxBufferSize);
 }
@@ -109,7 +110,7 @@ void CWM_UART4_IRQHandler(void)
   * @param huart: UART handle pointer
   * @retval None
   */
-void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
+static void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
 {
     static DMA_HandleTypeDef hdma_tx;
     static DMA_HandleTypeDef hdma_rx;
@@ -209,7 +210,7 @@ void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
   * @retval None
   */
 
-void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
+static void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
 {
     if(huart->Instance == UART4)
     {
@@ -241,12 +242,7 @@ void HAL_UART_MspDeInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
     }  
 }
 
-UART_HandleTypeDef *CWM_UART4_GET_HANDLE(void)
-{
-    return &huart4;
-}
-
-void CWM_UART_INIT_UART4_PA0_PA1(void)
+static void CWM_UART_INIT_UART4_PA0_PA1(void)
 {
 
     /*##-1- Configure the UART peripheral ######################################*/
@@ -266,14 +262,32 @@ void CWM_UART_INIT_UART4_PA0_PA1(void)
     huart4.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
     huart4.Init.Mode       = UART_MODE_TX_RX;
     
-    if(HAL_UART_DeInit(&huart4) != HAL_OK)
-    {
-        Error_Handler();
-    }  
     if(HAL_UART_Init(&huart4) != HAL_OK)
     {
         Error_Handler();
     }
+
+}
+
+
+static void CWM_UART_DEINIT_UART4_PA0_PA1(void)
+{
+    if(HAL_UART_DeInit(&huart4) != HAL_OK)
+    {
+        Error_Handler();
+    }  
+}
+
+void CWM_UART4_INIT(pUsartClass_t init)
+{
+    init->handle = &huart4;
+    init->init = CWM_UART_INIT_UART4_PA0_PA1;
+    init->deInit= CWM_UART_DEINIT_UART4_PA0_PA1;
+    init->mspInit= HAL_UART_MspInit_UART4_PA0_PA1;
+    init->mspDeInit= HAL_UART_MspDeInit_UART4_PA0_PA1;
+    
+    init->write= CWM_UART4_WRITE;
+    init->read= CWM_UART4_READ;
 
 }
 

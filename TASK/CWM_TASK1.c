@@ -36,8 +36,11 @@ static void evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE(void *handle, void *evtData)
 
 static void BT_INIT(void)
 {
+    pUsartClass_t ptr = CWM_GET_USART_HANDLE(CWM_USART3);
+    if(ptr != NULL)
+        BLE_HC06S.stringWriteCallBack = ptr->write;
+    
     MODULE_HC_06_INIT(&BLE_HC06S);
-    BLE_HC06S.stringWriteCallBack = CWM_USART3_WRITE;
 
     /*Register CWM_CMD_USART3_RX_UPDATE event callback*/
     CWM_MSG_QUEUE_REGISTERED(CWM_CMD_USART3_RX_UPDATE, NULL, evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE);

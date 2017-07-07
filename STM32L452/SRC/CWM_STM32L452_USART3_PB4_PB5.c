@@ -1,4 +1,5 @@
 
+#include "CWM_STM32L452_UART.h"
 #include "CWM_STM32L452_USART3_PB4_PB5.h"
 
 #ifdef USE_USART3_PB4_PB5
@@ -15,17 +16,21 @@ DMA_HandleTypeDef hdma_usart3_tx;
 void DMA1_Channel2_IRQHandler(void);
 void DMA1_Channel3_IRQHandler(void);
 
-int CWM_USART3_WRITE(uint8_t * TxBuffer, int TxBufferSize)
+static int CWM_USART3_WRITE(uint8_t * TxBuffer, int TxBufferSize)
 {
 #if 1
-    return HAL_UART_Transmit_DMA(&huart3, TxBuffer, TxBufferSize);
+        return HAL_UART_Transmit_DMA(&huart3, TxBuffer, TxBufferSize);
 #else
+    if(HAL_UART_STATE_READY == huart3->gState)
+    else
+        return -1;
+        
     return HAL_UART_Transmit_IT(&huart3, TxBuffer, TxBufferSize);
     return HAL_UART_Transmit(&huart3, TxBuffer, TxBufferSize, 2*TxBufferSize);
 #endif
 }
 
-int CWM_USART3_READ(uint8_t * RxBuffer, int RxBufferSize)
+static int CWM_USART3_READ(uint8_t * RxBuffer, int RxBufferSize)
 {
 #if 1
     return HAL_UART_Receive_IT(&huart3, RxBuffer, RxBufferSize);
@@ -64,7 +69,7 @@ void DMA1_Channel3_IRQHandler(void)
 * @brief This function handles USART3 global interrupt.
 */
 #endif /*USE_DMA*/ 
-void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
+static void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
     RCC_PeriphCLKInitTypeDef PeriphClkInit;
@@ -156,7 +161,7 @@ void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 #endif /*USE_DMA*/ 
     }
 }
-void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
+static void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 {
     if(huart->Instance==USART3)
     {
@@ -181,12 +186,8 @@ void HAL_UART_MspDeInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 
 }
 
-UART_HandleTypeDef *CWM_USART3_GET_HANDLE(void)
-{
-    return &huart3;
-}
 
-void CWM_UART_INIT_USART3_PB4_PB5(void)
+static void CWM_UART_INIT_USART3_PB4_PB5(void)
 {
     /*BaudRate = 9600; transmit data speed about 1000byte/s*/
 
@@ -206,7 +207,7 @@ void CWM_UART_INIT_USART3_PB4_PB5(void)
     }
 }
 
-void CWM_UART_DEINIT_USART3_PB4_PB5(void)
+static void CWM_UART_DEINIT_USART3_PB4_PB5(void)
 {
     /*BaudRate = 9600; transmit data speed about 1000byte/s*/
 
@@ -224,6 +225,18 @@ void CWM_UART_DEINIT_USART3_PB4_PB5(void)
     {
         Error_Handler();
     }
+}
+
+void CWM_USART3_INIT(pUsartClass_t init)
+{
+    init->handle = &huart3;
+    init->init = CWM_UART_INIT_USART3_PB4_PB5;
+    init->deInit= CWM_UART_DEINIT_USART3_PB4_PB5;
+    init->mspInit= HAL_UART_MspInit_USART3_PB4_PB5;
+    init->mspDeInit= HAL_UART_MspDeInit_USART3_PB4_PB5;
+    
+    init->write= CWM_USART3_WRITE;
+    init->read= CWM_USART3_READ;
 }
 
 #endif
