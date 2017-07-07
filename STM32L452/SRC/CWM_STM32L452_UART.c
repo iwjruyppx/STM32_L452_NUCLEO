@@ -29,7 +29,6 @@ typedef struct {
     int size;
     int errCode;
     uint8_t RxBuffer[MAX_RXBUFFERSIZE];
-    CWM_STRING_CALLBACK callBack;
     CwmQueue_t queue;
 }CWM_UART_LISTEN_t, *pCWM_UART_LISTEN_t;
 
@@ -68,8 +67,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if(CWM_U4.status)
         {
             CWM_U4.errCode = 0;
-            if(CWM_U4.callBack != NULL)
-                CWM_U4.callBack(CWM_U4.RxBuffer, CWM_U4.size);
             
             CWM_UART_QUEUE_SET(&CWM_U4.queue, CWM_U4.RxBuffer, CWM_U4.size);
             CWM_UART4_READ(CWM_U4.RxBuffer, CWM_U4.size);
@@ -137,9 +134,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
         if(CWM_U4.status)
         {
             CWM_U4.errCode = -1;
-            if(CWM_U4.callBack != NULL)
-                CWM_U4.callBack(CWM_U4.RxBuffer, -1);
             
+            HAL_UART_DMAStop(huart);
             CWM_UART4_READ(CWM_U4.RxBuffer, CWM_U4.size);
         }
     }
@@ -242,8 +238,7 @@ static void CWM_UART_EVENT_REGISTER(void)
     CWM_MSG_QUEUE_REGISTERED(CWM_CMD_USART_LISTEN, NULL, evtcb_CWM_CMD_USART_LISTEN);
 }
 
-int timestamp = 0;
-
+#ifdef USE_USART3_PB4_PB5
 static void CWM_TIME3_IRQ_CALLBACK(void *info)
 {
     CWM_CMD_t data;
@@ -279,25 +274,28 @@ static void CWM_TIME3_IRQ_CALLBACK(void *info)
         CWM_USART3_READ(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
     }
 
-    timestamp++;
 }
+#endif /*USE_USART3_PB4_PB5*/
 
 int GET_GPS_UART_STRING(void)
 {
-    uint8_t data;
+    uint8_t data = 0;
+#ifdef USE_UART4_PA0_PA1
     if(CWM_UART_QUEUE_GET(&CWM_U4.queue, &data, 1))
         return -1;
+#endif /*USE_UART4_PA0_PA1*/
     return data;
 }
 
 void CWM_UART_INIT(void)
 {
+    /*Event listen register*/
+    CWM_UART_EVENT_REGISTER();
+    
 #ifdef USE_UART4_PA0_PA1
     /*Uart info queue*/
     CWM_UART_QUEUE_INIT(&CWM_U4.queue, 1024);
 
-    /*Event listen register*/
-    CWM_UART_EVENT_REGISTER();
 
     CWM_UART_INIT_UART4_PA0_PA1();
 #endif /*USE_UART4_PA0_PA1*/
