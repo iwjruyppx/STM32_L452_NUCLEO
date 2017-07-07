@@ -15,7 +15,6 @@
 extern int64_t gTimestamp;
 
 #ifdef USE_USART3_PB4_PB5
-#include "CWM_STM32L452_USART3_PB4_PB5.h"
 ModuleHc06Class_t BLE_HC06S;
 #define BT_SEND(fmt, args...) \
     if(NULL != BLE_HC06S.sendData)\

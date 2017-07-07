@@ -1,7 +1,7 @@
 
 #include "CWM_STM32L452_UART.h"
 #include "CWM_STM32L452_UART4.h"
-#include "CWM_STM32L452_USART3_PB4_PB5.h"
+#include "CWM_STM32L452_USART3.h"
 #include "CWM_STM32L452_TIMER.h"
 
 #include "CWM_UART_QUEUE.h"

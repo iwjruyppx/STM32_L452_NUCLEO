@@ -1,6 +1,6 @@
 
 #include "CWM_STM32L452_UART.h"
-#include "CWM_STM32L452_USART3_PB4_PB5.h"
+#include "CWM_STM32L452_USART3.h"
 
 #ifdef USE_USART3_PB4_PB5
 #define USE_DMA

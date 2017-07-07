@@ -1,6 +1,6 @@
 
-#ifndef __CWM_STM32L452_USART3_PB4_PB5_H
-#define __CWM_STM32L452_USART3_PB4_PB5_H
+#ifndef __CWM_STM32L452_USART3_H
+#define __CWM_STM32L452_USART3_H
 
 /*Standard Utility include file*/
 #include "CWM_UTILITY.h"
@@ -15,4 +15,4 @@ void CWM_USART3_INIT(pUsartClass_t init);
 
 #endif
 
-#endif /* __CWM_STM32L452_USART3_PB4_PB5_H */
+#endif /* __CWM_STM32L452_USART3_H */
