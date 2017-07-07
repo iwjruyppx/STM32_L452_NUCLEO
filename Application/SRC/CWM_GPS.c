@@ -10,9 +10,20 @@ static gps_callback_t gps_cb_funcs;
 
 static CWM_GPS_INFO GPS_INFO;
 
+static int LOGE(const char * format,...){
+    va_list argList;
+    CWM_CMD_t data;
+
+    va_start(argList,format);
+    vsnprintf(data.string,sizeof(data.string),format,argList);
+    va_end(argList);
+    data.cmd = CWM_CMD_SCREEN_WRITE_AUTO_NEW_LINE;
+    CWM_INTERNAL_CMD_SET_T(&data);
+    return 0;
+}
+
 static void GPS_LOG_LISTEN(char *str)
 {
-
 }
 static void GPS_GGA_LISTEN(gps_gga_t *p)
 {
@@ -29,6 +40,17 @@ static void GPS_GSV_LISTEN(gps_gsv_t *p)
 static void GPS_RMC_LISTEN(gps_rmc_t *p)
 {
     memcpy(&GPS_INFO.rmc, p, sizeof(gps_rmc_t));
+    
+    CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_CLEAN);
+    LOGE("T:%d:%d:%d,%X\n",GPS_INFO.rmc.hour,GPS_INFO.rmc.min,GPS_INFO.rmc.sec,GPS_INFO.rmc.status);
+    #if 1
+    LOGE("NL:%s\n",doubleToString(GPS_INFO.rmc.nl));
+    LOGE("EL:%s\n",doubleToString(GPS_INFO.rmc.el));
+    #endif
+    LOGE("EL:%s\n",doubleToString(123.000123));
+    LOGE("EL:%s\n",doubleToString(123.123));
+    CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_UPDATE);
+    
 }
 
 static void evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE(void *handle, void *evtData)

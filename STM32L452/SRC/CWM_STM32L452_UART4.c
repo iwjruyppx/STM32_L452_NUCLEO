@@ -195,7 +195,7 @@ void HAL_UART_MspInit_UART4_PA0_PA1(UART_HandleTypeDef *huart)
         HAL_NVIC_EnableIRQ(CWM_UART4_DMA_RX_IRQn);
 
         /* NVIC for USART, to catch the TX complete */
-        HAL_NVIC_SetPriority(CWM_UART4_IRQn, 8, 1);
+        HAL_NVIC_SetPriority(CWM_UART4_IRQn, 8, 2);
         HAL_NVIC_EnableIRQ(CWM_UART4_IRQn);
     }
 }

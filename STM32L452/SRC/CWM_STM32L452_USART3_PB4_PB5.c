@@ -148,10 +148,10 @@ void HAL_UART_MspInit_USART3_PB4_PB5(UART_HandleTypeDef *huart)
 
         /* DMA interrupt init */
         /* DMA1_Channel2_IRQn interrupt configuration */
-        HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 9, 3);
+        HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 8, 1);
         HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
         /* DMA1_Channel3_IRQn interrupt configuration */
-        HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 9, 2);
+        HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 8, 0);
         HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 #endif /*USE_DMA*/ 
     }
