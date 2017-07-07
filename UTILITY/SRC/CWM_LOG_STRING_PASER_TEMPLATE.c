@@ -84,6 +84,56 @@ int CWM_STRING_COMPARE(char *stringdata , char * string)
     }
     return CWM_ERROR_NOT_FOUND;
 }
+
+/*
+    double to string convert.
+*/
+const char* doubleToString(double value)
+{
+    static char temp[16];
+    char temp1[16];
+    int zero_check = 1;
+    int len;
+    int i;
+    sprintf(temp1,"%d",(int)((value -((int)value))*1000000000));
+    
+    len = strlen(temp1);
+    if(len < 9)
+    {
+        for(i=0;i<=(len);i++)
+        {
+            temp1[9-i] =  temp1[len-i];
+            if(zero_check)
+            {
+                if (temp1[9-i] == 48 || temp1[9-i]==0) 
+                    temp1[9-i] = 0;
+                else
+                    zero_check = 0;
+            }
+        }
+        for(i=0;i<(9-len);i++)
+        {
+            temp1[i] =  '0';
+        }
+    }
+    else
+    {
+        for(i=0;i<=(len);i++)
+        {
+            if(zero_check)
+            {
+                if (temp1[9-i] == 48 || temp1[9-i]==0) 
+                    temp1[9-i] = 0;
+                else
+                    zero_check = 0;
+            }
+        }
+    }
+    
+    sprintf(temp,"%d.%s",(int)value,temp1);
+    return (const char *)temp;
+}
+
 /******************************************************************************/
 /*END Utility*/
 /******************************************************************************/

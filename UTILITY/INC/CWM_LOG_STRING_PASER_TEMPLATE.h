@@ -21,6 +21,7 @@ void CWM_LOG_STRING_PASER_INIT(pLogStrPaserHandle_t Handle);
 /*Utility*/
 /******************************************************************************/
 int CWM_STRING_COMPARE(char *stringdata , char * string);
+const char* doubleToString(double value);
 /******************************************************************************/
 /*END Utility*/
 /******************************************************************************/
