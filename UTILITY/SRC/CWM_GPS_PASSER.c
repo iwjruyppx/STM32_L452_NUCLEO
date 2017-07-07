@@ -13,7 +13,8 @@ typedef struct {
     char data[DATABUFSIZ];
 }CWM_STRING_PASSER_t, *pCWM_STRING_PASSER_t;
 
-CWM_STRING_PASSER_t StringBuff;
+static CWM_STRING_PASSER_t StringBuff;
+static char plist[PARAM_ARRAYSIZE][PARAM_TXTMAXLEN];
 
 void CWM_GPS_PASSER_INIT(gps_callback_t *cb_funcs)
 {
@@ -59,7 +60,6 @@ static char * parse(char *src, char *des, size_t dessiz, char *delim) {
 }
 
 static int parseAndCallbackGGA(char *src, gps_callback_t *cbfuncs) {
-    char plist[PARAM_ARRAYSIZE][PARAM_TXTMAXLEN];
     char *p = src;
     int cnt = 0;
     
@@ -119,7 +119,6 @@ static int parseAndCallbackGGA(char *src, gps_callback_t *cbfuncs) {
 }
 
 static int parseAndCallbackGSA(char *src, gps_callback_t *cbfuncs) {
-    char plist[PARAM_ARRAYSIZE][PARAM_TXTMAXLEN];
     char *p = src;
     int cnt = 0;
     
@@ -149,7 +148,6 @@ static int parseAndCallbackGSA(char *src, gps_callback_t *cbfuncs) {
 }
 
 static int parseAndCallbackRMC(char *src, gps_callback_t *cbfuncs) {
-    char plist[PARAM_ARRAYSIZE][PARAM_TXTMAXLEN];
     char *p = src;
     int cnt = 0;
     
@@ -188,7 +186,6 @@ static int parseAndCallbackRMC(char *src, gps_callback_t *cbfuncs) {
 
 static int parseAndCallbackGSV(char *src, gps_callback_t *cbfuncs) {
 
-    char plist[PARAM_ARRAYSIZE][PARAM_TXTMAXLEN];
     char *p = src;
     int cnt = 0;
     
