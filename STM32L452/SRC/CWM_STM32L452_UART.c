@@ -13,7 +13,7 @@
 
 #ifdef USE_USART3_PB4_PB5
 typedef struct {
-    UsartClass_t uart;
+    pUsartClass_t uart;
     int status;
     int time_en;
     pTimerClass_t tim;
@@ -26,7 +26,7 @@ static CWM_USART3_CONTROL_t CWM_U3;
 
 #ifdef USE_UART4_PA0_PA1
 typedef struct {
-    UsartClass_t uart;
+    pUsartClass_t uart;
     int status;
     int size;
     int errCode;
@@ -79,7 +79,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             CWM_U4.errCode = 0;
             
             CWM_UART_QUEUE_SET(&CWM_U4.rxQueue, CWM_U4.RxBuffer, CWM_U4.size);
-            CWM_U4.uart.read(CWM_U4.RxBuffer, CWM_U4.size);
+            if(NULL != CWM_U4.uart)
+                CWM_U4.uart->read(CWM_U4.RxBuffer, CWM_U4.size);
             
             data.cmd = CWM_CMD_UART4_RX_UPDATE;
             CWM_MSG_QUEUE_SEND(&data);
@@ -107,7 +108,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             data.string[MAX_CWM_CMD_DATA_SIZE -1] = 0x00; /*0x00 = "\0" */
             CWM_MSG_QUEUE_SEND(&data);
         
-            CWM_U3.uart.read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+            if(NULL != CWM_U3.uart)
+                CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -146,7 +148,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
             CWM_U4.errCode = -1;
             
             HAL_UART_DMAStop(huart);
-            CWM_U4.uart.read(CWM_U4.RxBuffer, CWM_U4.size);
+            if(NULL != CWM_U4.uart)
+                CWM_U4.uart->read(CWM_U4.RxBuffer, CWM_U4.size);
         }
     }
 #endif /*USE_UART4_PA0_PA1*/
@@ -163,12 +166,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
         
         HAL_UART_AbortReceive_IT(huart);
         
-        CWM_U3.uart.deInit();
-        CWM_U3.uart.init();
+        CWM_U3.uart->deInit();
+        CWM_U3.uart->init();
         
         if(CWM_U3.status)
         {
-            CWM_U3.uart.read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+            if(NULL != CWM_U3.uart)
+                CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -187,12 +191,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(NULL != CWM_U4.uart.handle)
-        CWM_U4.uart.mspInit(huart);
+    if(NULL != CWM_U4.uart)
+        CWM_U4.uart->mspInit(huart);
 #endif /*USE_UART4_PA0_PA1*/
 #ifdef USE_USART3_PB4_PB5
-    if(NULL != CWM_U3.uart.handle)
-        CWM_U3.uart.mspInit(huart);
+    if(NULL != CWM_U3.uart)
+        CWM_U3.uart->mspInit(huart);
 #endif /*USE_USART3_PB4_PB5*/
 
 }
@@ -210,13 +214,13 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
 #ifdef USE_UART4_PA0_PA1
-    if(NULL != CWM_U4.uart.handle)
-        CWM_U4.uart.mspDeInit(huart);
+    if(NULL != CWM_U4.uart)
+        CWM_U4.uart->mspDeInit(huart);
 #endif /*USE_UART4_PA0_PA1*/
 
 #ifdef USE_USART3_PB4_PB5
-    if(NULL != CWM_U3.uart.handle)
-        CWM_U3.uart.mspDeInit(huart);
+    if(NULL != CWM_U3.uart)
+        CWM_U3.uart->mspDeInit(huart);
 #endif /*USE_USART3_PB4_PB5*/
 }
 
@@ -230,7 +234,8 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
         {
             CWM_U4.status = 1;
             CWM_U4.size = 64;
-            CWM_U4.uart.read(CWM_U4.RxBuffer, CWM_U4.size);
+            if(NULL != CWM_U4.uart)
+                CWM_U4.uart->read(CWM_U4.RxBuffer, CWM_U4.size);
         }
     }
 #endif /*USE_UART4_PA0_PA1*/
@@ -241,7 +246,8 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
         if(CWM_U3.status == 0)
         {
             CWM_U3.status = 1;
-            CWM_U3.uart.read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+            if(NULL != CWM_U3.uart)
+                CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
@@ -267,12 +273,11 @@ static void CWM_TIME3_IRQ_CALLBACK(void *info)
         CWM_U3.time_en = 0;
     }
     
-    if(CWM_U3.status)
+    if(CWM_U3.status && (NULL != CWM_U3.uart))
     {
-        
         /*Send data to host*/
         data.cmd = CWM_CMD_USART3_RX_UPDATE;
-        for(i=0; i<CWM_U3.uart.handle->RxXferSize -CWM_U3.uart.handle->RxXferCount; i++)
+        for(i=0; i<CWM_U3.uart->handle->RxXferSize -CWM_U3.uart->handle->RxXferCount; i++)
         {
             data.string[j++] =  CWM_U3.RxBuffer[i];
         }
@@ -281,11 +286,11 @@ static void CWM_TIME3_IRQ_CALLBACK(void *info)
         data.string[j++] = 0x00; /*0x00 = "\0" */
             
         
-        HAL_UART_AbortReceive_IT(CWM_U3.uart.handle);
+        HAL_UART_AbortReceive_IT(CWM_U3.uart->handle);
         memset(CWM_U3.RxBuffer, 0x00, MAX_CWM_CMD_DATA_SIZE);
         
         CWM_MSG_QUEUE_SEND(&data);
-        CWM_U3.uart.read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+        CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
     }
 
 }
@@ -308,7 +313,7 @@ pUsartClass_t CWM_GET_USART_HANDLE(CWM_UART_e dev)
     {
 #ifdef USE_USART3_PB4_PB5
         case CWM_USART3:
-            return &CWM_U3.uart;
+            return CWM_U3.uart;
 #endif /*USE_USART3_PB4_PB5*/
         default:
             break;
@@ -324,23 +329,24 @@ void CWM_UART_INIT(void)
 #ifdef USE_UART4_PA0_PA1
     /*Uart info queue*/
     CWM_UART_QUEUE_INIT(&CWM_U4.rxQueue, 1024);
-    CWM_UART4_INIT(&CWM_U4.uart);
 
-    CWM_U4.uart.deInit();
-    CWM_U4.uart.init();
+    CWM_U4.uart = CWM_GET_UART4_ENTRY();
+
+    CWM_U4.uart->deInit();
+    CWM_U4.uart->init();
 #endif /*USE_UART4_PA0_PA1*/
 
 #ifdef USE_USART3_PB4_PB5
 
     float dt = 0.0f;
 
-    CWM_USART3_INIT(&CWM_U3.uart);
+    CWM_U3.uart = CWM_GET_USART3_ENTRY();
 
     /*Uart info queue*/
     CWM_UART_QUEUE_INIT(&CWM_U3.txQueue, 256);
 
-    CWM_U3.uart.deInit();
-    CWM_U3.uart.init();
+    CWM_U3.uart->deInit();
+    CWM_U3.uart->init();
     
     /*Timer3 get entry and register callback*/
     CWM_U3.tim = CWM_GET_TIMER_ENTRY(CWM_TIMER3);
@@ -352,9 +358,9 @@ void CWM_UART_INIT(void)
         9600 1byte about 1ms
         buff time reserve  3time, about 3ms.
     */
-    if(CWM_U3.uart.handle->Init.BaudRate !=0)
+    if(CWM_U3.uart->handle->Init.BaudRate !=0)
     {
-        dt = (9600.0f /(float)CWM_U3.uart.handle->Init.BaudRate) *3.0f;
+        dt = (9600.0f /(float)CWM_U3.uart->handle->Init.BaudRate) *3.0f;
         CWM_U3.tim->setPeriod((dt < 1.0f) ? 1:(uint32_t)dt);
     }
     CWM_U3.tim->stop();

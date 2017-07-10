@@ -227,16 +227,19 @@ static void CWM_UART_DEINIT_USART3_PB4_PB5(void)
     }
 }
 
-void CWM_USART3_INIT(pUsartClass_t init)
+static UsartClass_t FunPointerUsart3 = {
+    .handle = &huart3,
+    .init = CWM_UART_INIT_USART3_PB4_PB5,
+    .deInit= CWM_UART_DEINIT_USART3_PB4_PB5,
+    .mspInit= HAL_UART_MspInit_USART3_PB4_PB5,
+    .mspDeInit= HAL_UART_MspDeInit_USART3_PB4_PB5,
+    .write= CWM_USART3_WRITE,
+    .read= CWM_USART3_READ,
+};
+
+pUsartClass_t CWM_GET_USART3_ENTRY(void)
 {
-    init->handle = &huart3;
-    init->init = CWM_UART_INIT_USART3_PB4_PB5;
-    init->deInit= CWM_UART_DEINIT_USART3_PB4_PB5;
-    init->mspInit= HAL_UART_MspInit_USART3_PB4_PB5;
-    init->mspDeInit= HAL_UART_MspDeInit_USART3_PB4_PB5;
-    
-    init->write= CWM_USART3_WRITE;
-    init->read= CWM_USART3_READ;
+    return &FunPointerUsart3;
 }
 
 #endif

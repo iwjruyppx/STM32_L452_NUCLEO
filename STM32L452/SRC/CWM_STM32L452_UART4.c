@@ -278,17 +278,19 @@ static void CWM_UART_DEINIT_UART4_PA0_PA1(void)
     }  
 }
 
-void CWM_UART4_INIT(pUsartClass_t init)
-{
-    init->handle = &huart4;
-    init->init = CWM_UART_INIT_UART4_PA0_PA1;
-    init->deInit= CWM_UART_DEINIT_UART4_PA0_PA1;
-    init->mspInit= HAL_UART_MspInit_UART4_PA0_PA1;
-    init->mspDeInit= HAL_UART_MspDeInit_UART4_PA0_PA1;
-    
-    init->write= CWM_UART4_WRITE;
-    init->read= CWM_UART4_READ;
+static UsartClass_t FunPointerUart4 = {
+    .handle = &huart4,
+    .init = CWM_UART_INIT_UART4_PA0_PA1,
+    .deInit= CWM_UART_DEINIT_UART4_PA0_PA1,
+    .mspInit= HAL_UART_MspInit_UART4_PA0_PA1,
+    .mspDeInit= HAL_UART_MspDeInit_UART4_PA0_PA1,
+    .write= CWM_UART4_WRITE,
+    .read= CWM_UART4_READ,
+};
 
+pUsartClass_t CWM_GET_UART4_ENTRY(void)
+{
+    return &FunPointerUart4;
 }
 
 #endif

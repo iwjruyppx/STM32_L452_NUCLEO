@@ -10,7 +10,7 @@
 #include "stm32l4xx_nucleo.h"
 
 #ifdef USE_UART4_PA0_PA1
-void CWM_UART4_INIT(pUsartClass_t init);
+pUsartClass_t CWM_GET_UART4_ENTRY(void);
 #endif
 
 #endif /* __CWM_STM32L452_UART4_H */

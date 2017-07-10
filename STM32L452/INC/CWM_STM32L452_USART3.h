@@ -11,7 +11,7 @@
 
 #ifdef USE_USART3_PB4_PB5
 
-void CWM_USART3_INIT(pUsartClass_t init);
+pUsartClass_t CWM_GET_USART3_ENTRY(void);
 
 #endif
 
