@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_LINK_LIST_TEMPLATE.h"
 
 #ifdef USE_LINK_LIST_TEMPLATE

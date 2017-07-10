@@ -2,8 +2,6 @@
 #ifndef __CWM_SCREEN_H
 #define __CWM_SCREEN_H
 
-#include "CWM_UTILITY.h"
-
 typedef struct {
     CWM_INFO_CALLBACK info;
     union { //CWM_SCREEN_WRITE_AUTO_NEW_LINE

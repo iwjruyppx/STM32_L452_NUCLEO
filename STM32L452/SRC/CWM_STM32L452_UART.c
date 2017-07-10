@@ -1,8 +1,13 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
+
 #include "CWM_STM32L452_UART.h"
 #include "CWM_STM32L452_UART4.h"
 #include "CWM_STM32L452_USART3.h"
-#include "CWM_STM32L452_TIMER.h"
 
 #include "CWM_UART_QUEUE.h"
 #include "CWM_MSG_QUEUE.h"

@@ -2,8 +2,6 @@
 #ifndef __CWM_LOG_STRING_PASER_TEMPLATE_H
 #define __CWM_LOG_STRING_PASER_TEMPLATE_H
 
-#include "CWM_UTILITY.h"
-
 #ifdef USE_LOG_STRING_PASSER_TEMPLATE
 
 typedef struct LogStrPaserH_t{

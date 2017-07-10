@@ -2,9 +2,6 @@
 #ifndef __MODULE_BT_HC_06_SLAVE_H
 #define __MODULE_BT_HC_06_SLAVE_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
 #ifdef USE_MODULE_BT_HC_06_SLAVE
 
 typedef enum {

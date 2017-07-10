@@ -2,9 +2,6 @@
 #ifndef __CWM_INTERNAL_CMD_H
 #define __CWM_INTERNAL_CMD_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
 int CWM_INTERNAL_CMD(void);
 
 int CWM_INTERNAL_CMD_SET(uCWM_CMD cmd);

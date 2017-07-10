@@ -2,13 +2,6 @@
 #ifndef __CWM_STM32L452_I2C_H
 #define __CWM_STM32L452_I2C_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
-/*Cube Hal include file*/
-#include "stm32l4xx_hal.h"
-#include "stm32l4xx_nucleo.h"
-
 /* I2C TIMING Register define when I2C clock source is SYSCLK */
 /* I2C TIMING is calculated in case of the I2C Clock source is the SYSCLK = 80 MHz */
 /* This example use TIMING to 0x00D00E28 to reach 1 MHz speed (Rise time = 120ns, Fall time = 25ns) */
@@ -68,8 +61,6 @@
 #define I2Cx_DMA_RX_IRQn                DMA1_Channel7_IRQn
 #define I2Cx_DMA_TX_IRQHandler          DMA1_Channel6_IRQHandler
 #define I2Cx_DMA_RX_IRQHandler          DMA1_Channel7_IRQHandler
-
-extern I2C_HandleTypeDef I2cHandle;
 
 void CWM_I2C_INIT(void);
 void CWM_I2C_MASTER_DMA_INIT(void);

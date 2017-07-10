@@ -2,8 +2,6 @@
 #ifndef __CWM_GPS_PASSER_H
 #define __CWM_GPS_PASSER_H
 
-#include "CWM_UTILITY.h"
-
 #ifdef USE_GPS_PASSER
 /**
  * GGA - Global Positioning System Fixed Data.

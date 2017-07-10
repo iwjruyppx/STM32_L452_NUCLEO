@@ -1,5 +1,10 @@
 
-#include "CWM_STM32L452_UART.h"
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
+
 #include "CWM_STM32L452_USART3.h"
 
 #ifdef USE_USART3_PB4_PB5

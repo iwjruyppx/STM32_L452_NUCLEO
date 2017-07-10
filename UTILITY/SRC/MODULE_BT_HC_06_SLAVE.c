@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "MODULE_BT_HC_06_SLAVE.h"
 
 #ifdef USE_MODULE_BT_HC_06_SLAVE
@@ -12,7 +15,6 @@ AT+BAUD4盢 baud rate 传 9600
 AT+BAUD5盢 baud rate 传 19200
 AT+BAUD6盢 baud rate 传 38400
 AT+BAUD7盢 baud rate 传 57600
-
 
 AT+ROLE=1
 AT+BIND=2016,5,232325

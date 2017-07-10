@@ -1,8 +1,6 @@
 #ifndef __CwmQueue_H__
 #define __CwmQueue_H__
 
-#include "CWM_UTILITY.h"
-
 #ifdef USE_CWM_QUEUE
 typedef struct QueueDefinition
 {

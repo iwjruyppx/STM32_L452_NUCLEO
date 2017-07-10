@@ -2,9 +2,6 @@
 #ifndef __CWM_GPS_H
 #define __CWM_GPS_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
 #ifdef USE_GPS
 
 typedef struct {

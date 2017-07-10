@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_LOG_STRING_PASER_TEMPLATE.h"
 
 #ifdef USE_LOG_STRING_PASSER_TEMPLATE

@@ -2,9 +2,6 @@
 #ifndef __CWM_FACTORY_CMD_PASSER_H
 #define __CWM_FACTORY_CMD_PASSER_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
 typedef enum {    
     FACTORY_TYPE_RESERVED = 0,
     FACTORY_TYPE_FACTORY_MODE,

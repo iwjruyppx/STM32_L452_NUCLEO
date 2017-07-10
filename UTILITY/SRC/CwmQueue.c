@@ -1,3 +1,7 @@
+
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CwmQueue.h"
 
 #ifdef USE_CWM_QUEUE

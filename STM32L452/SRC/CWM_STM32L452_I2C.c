@@ -1,4 +1,10 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
+
 #include "CWM_STM32L452_I2C.h"
 
 /* I2C handler declaration */
@@ -11,7 +17,62 @@ void CWM_I2C_INIT(void)
     CWM_I2C_MASTER_DMA_INIT();
 }
 
+/******************************************************************************/
+/*                 STM32L4xx Peripherals Interrupt Handlers                  */
+/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  available peripheral interrupt handler's name please refer to the startup */
+/*  file (startup_stm32l4xx.s).                                               */
+/******************************************************************************/
 
+void I2Cx_EV_IRQHandler(void);
+void I2Cx_ER_IRQHandler(void);
+void I2Cx_DMA_RX_IRQHandler(void);
+void I2Cx_DMA_TX_IRQHandler(void);
+/**
+  * @brief  This function handles I2C event interrupt request.
+  * @param  None
+  * @retval None
+  * @Note   This function is redefined in "main.h" and related to I2C data transmission
+  */
+void I2Cx_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&I2cHandle);
+}
+
+/**
+  * @brief  This function handles I2C error interrupt request.
+  * @param  None
+  * @retval None
+  * @Note   This function is redefined in "main.h" and related to I2C error
+  */
+void I2Cx_ER_IRQHandler(void)
+{
+  HAL_I2C_ER_IRQHandler(&I2cHandle);
+}
+
+/**
+  * @brief  This function handles DMA interrupt request.
+  * @param  None
+  * @retval None
+  * @Note   This function is redefined in "main.h" and related to DMA Channel 
+  *         used for I2C data transmission     
+  */
+void I2Cx_DMA_RX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(I2cHandle.hdmarx);
+}
+
+/**
+  * @brief  This function handles DMA interrupt request.
+  * @param  None
+  * @retval None
+  * @Note   This function is redefined in "main.h" and related to DMA Channel 
+  *         used for I2C data reception    
+  */
+void I2Cx_DMA_TX_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(I2cHandle.hdmatx);
+}
 
 void CWM_I2C_MASTER_DMA_INIT(void)
 {

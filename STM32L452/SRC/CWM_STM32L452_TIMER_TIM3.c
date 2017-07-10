@@ -1,4 +1,10 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
+
 #include "CWM_STM32L452_TIMER_TIM3.h"
 
 #ifdef USE_TIMER3

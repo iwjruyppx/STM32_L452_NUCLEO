@@ -2,9 +2,6 @@
 #ifndef __CWM_UART_QUEUE_H
 #define __CWM_UART_QUEUE_H
 
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
-
 int CWM_UART_QUEUE_INIT(pCwmQueue_t mem, int size);
 
 int CWM_UART_QUEUE_SET(pCwmQueue_t mem, uint8_t *data, int size);

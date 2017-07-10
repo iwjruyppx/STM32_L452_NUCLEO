@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_UART_QUEUE.h"
 
 #define CWM_UART_QUEUE_BUFF_SIZE    1024

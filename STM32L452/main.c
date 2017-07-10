@@ -1,16 +1,19 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "cmsis_os.h"
-#include "CWM_STM32L452_I2C.h"
-#include "CWM_STM32L452_UART.h"
-#include "CWM_STM32L452_TIMER.h"
+/*Standard Hardware include file*/
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
 
-#include "CWM_SCREEN.h"
+/*Standard Hardware include file*/
+#include "CWM_PERIPHERAL_L452.h"
+
+#include "main.h"
+
 #include "CWM_TASK1.h"
 #include "CWM_TASK2.h"
 #include "CWM_GPS.h"
+#include "CWM_SCREEN.h"
 #include "CWM_MSG_QUEUE.h"
 
 int64_t gTimestamp = 0ll;

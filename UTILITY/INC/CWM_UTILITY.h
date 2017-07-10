@@ -42,30 +42,23 @@
 /*********************************************************/
 /************//*MODULE*/
 /*********************************************************/
-
 /*Double Link List Module*/
 #include "CWM_LINK_LIST_TEMPLATE.h"
-
 /*Log String Paser Module*/
 #include "CWM_LOG_STRING_PASER_TEMPLATE.h"
-
-/*GPS Module*/
-#include "CWM_GPS_PASSER.h"
-
-/*OLED screen driver SSD1306*/
-#include "tm_stm32f4_ssd1306.h"
-
-/*OLED screen driver SH1106*/
-#include "tm_stm32f4_SH1106.h"
-
-/*Screen fonts*/
-#include "tm_stm32f4_fonts.h"
-
 /*Circular Queue*/
 #include "CwmQueue.h"
 
+/*Screen fonts*/
+#include "tm_stm32f4_fonts.h"
+/*OLED screen driver SH1106*/
+#include "tm_stm32f4_SH1106.h"
+/*OLED screen driver SSD1306*/
+#include "tm_stm32f4_ssd1306.h"
 /*BLE HC-06 Module for slave*/
 #include "MODULE_BT_HC_06_SLAVE.h"
+/*GPS Module*/
+#include "CWM_GPS_PASSER.h"
 /*********************************************************/
 /************//*MODULE END*/
 /*********************************************************/

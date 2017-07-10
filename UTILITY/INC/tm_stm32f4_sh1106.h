@@ -1,21 +1,7 @@
-
 #ifndef TM_SH1106_H
-#define TM_SH1106_H 100
-
-/* C++ detection */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
+#define TM_SH1106_H
 
 #ifdef USE_OLED_DRIVER_SH1106
-
-#include "tm_stm32f4_fonts.h"
-
-#include "stdlib.h"
-#include "string.h"
 
 /* I2C address */
 #ifndef SH1106_I2C_ADDR
@@ -79,7 +65,6 @@ extern "C" {
 #define SH1106_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL 0x29
 #define SH1106_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL 0x2A
 
-
 typedef enum {
 	SH1106_COLOR_BLACK = 0x00, /*!< Black color, no pixel */
 	SH1106_COLOR_WHITE = 0x01  /*!< Pixel is set. Color depends on LCD */
@@ -91,7 +76,6 @@ typedef struct {
     void (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
 
 } SH1106_callback_t;
-
 
 uint8_t TM_SH1106_Init(SH1106_callback_t *cb_funcs);
 
@@ -129,12 +113,6 @@ void TM_SH1106_ScreenClean(void);
 void SH1106_ON(void);
 void SH1106_OFF(void);
 
-
 #endif /*USE_OLED_DRIVER_SH1106*/
 
-/* C++ detection */
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* TM_SH1106_H */

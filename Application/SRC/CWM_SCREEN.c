@@ -1,8 +1,12 @@
 
-#include "CWM_SCREEN.h"
+
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
 
 /*Standard Hardware include file*/
 #include "CWM_PERIPHERAL_L452.h"
+
+#include "CWM_SCREEN.h"
 
 #include "CWM_MSG_QUEUE.h"
 

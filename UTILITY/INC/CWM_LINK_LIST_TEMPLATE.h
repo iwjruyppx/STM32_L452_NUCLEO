@@ -2,8 +2,6 @@
 #ifndef __CWM_LINK_LIST_TEMPLATE_H
 #define __CWM_LINK_LIST_TEMPLATE_H
 
-#include "CWM_UTILITY.h"
-
 #ifdef USE_LINK_LIST_TEMPLATE
 typedef struct {
     uint32_t evtHandle;

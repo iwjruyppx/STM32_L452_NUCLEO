@@ -57,3 +57,9 @@ static void statemachine(void)
     task1_state++;
 }
 #endif
+
+
+#if 0
+extern ModuleHc06Class_t BLE_HC06S;
+BLE_HC06S.setCmd(&BLE_HC06S,CMD_HC06_SET_BAUD_230400, NULL);
+#endif

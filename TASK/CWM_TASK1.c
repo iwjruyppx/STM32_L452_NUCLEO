@@ -1,11 +1,11 @@
 
-#include "CWM_TASK1.h"
-
 /*Standard Utility include file*/
 #include "CWM_UTILITY.h"
 
 /*Standard Hardware include file*/
 #include "CWM_PERIPHERAL_L452.h"
+
+#include "CWM_TASK1.h"
 
 #include "CWM_MSG_QUEUE.h"
 #include "CWM_FACTORY_CMD_PASSER.h"

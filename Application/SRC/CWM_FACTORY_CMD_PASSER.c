@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_FACTORY_CMD_PASSER.h"
 
 static int SelftTestAcc_Cb(struct CWM_FACTORY_INFO_t *info, void *data)

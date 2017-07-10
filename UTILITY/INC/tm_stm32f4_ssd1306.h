@@ -1,120 +1,13 @@
-/**
- * @author  Tilen Majerle
- * @email   tilen@majerle.eu
- * @website http://stm32f4-discovery.com
- * @link    http://stm32f4-discovery.com/2015/05/library-61-ssd1306-oled-i2c-lcd-for-stm32f4xx
- * @version v1.0
- * @ide     Keil uVision
- * @license GNU GPL v3
- * @brief   Library for 128x64 SSD1306 I2C LCD
- *	
-@verbatim
-   ----------------------------------------------------------------------
-    Copyright (C) Tilen Majerle, 2015
-    
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
-     
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-   ----------------------------------------------------------------------
-@endverbatim
- */
+
 #ifndef TM_SSD1306_H
-#define TM_SSD1306_H 100
-
-/* C++ detection */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*Standard Utility include file*/
-#include "CWM_UTILITY.h"
+#define TM_SSD1306_H
 
 #ifdef USE_OLED_DRIVER_SSD1306
-
-/**
- * @addtogroup TM_STM32F4xx_Libraries
- * @{
- */
-
-/**
- * @defgroup TM_SSD1306
- * @brief    Library for 128x64 SSD1306 I2C LCD - http://stm32f4-discovery.com/2015/05/library-61-ssd1306-oled-i2c-lcd-for-stm32f4xx
- * @{
- *
- * This SSD1306 LCD uses I2C for communication
- *
- * Library features functions for drawing lines, rectangles and circles.
- *
- * It also allows you to draw texts and characters using appropriate functions provided in library.
- *
- * \par Default pinout
- *
-@verbatim
-SSD1306    |STM32F4xx    |DESCRIPTION
-
-VCC        |3.3V         |
-GND        |GND          |
-SCL        |PA8          |Serial clock line
-SDA        |PC9          |Serial data line
-@endverbatim
- *
- * \par Select custom I2C settings
- *
- * Use defines.h file for custom settings
- *
-@verbatim
-//Select custom I2C
-#define SSD1306_I2C              I2C3
-#define SSD1306_I2C_PINSPACK     TM_I2C_PinsPack_1
-
-//Select custom I2C address 
-#define SSD1306_I2C_ADDR         0x78
-
-//Select custom width and height if your LCD differs in size
-#define SSD1306_WIDTH            128
-#define SSD1306_HEIGHT           64
-@endverbatim
- *
- * \par Changelog
- *
-@verbatim
- Version 1.0
-  - First release
-@endverbatim
- *
- * \par Dependencies
- *
-@verbatim
- - STM32F4xx
- - STM32F4xx RCC
- - defines.h
- - TM I2C
- - TM FONTS
- - TM DELAY
- - string.h
- - stdlib.h
-@endverbatim
- */
 
 #include "tm_stm32f4_fonts.h"
 
 #include "stdlib.h"
 #include "string.h"
-
-/**
- * @defgroup TM_SSD1306_Macros
- * @brief    Library defines
- * @{
- */
 
 /* I2C address */
 #ifndef SSD1306_I2C_ADDR
@@ -132,16 +25,6 @@ SDA        |PC9          |Serial data line
 #ifndef SSD1306_HEIGHT
 #define SSD1306_HEIGHT           64
 #endif
-
-/**
- * @}
- */
- 
-/**
- * @defgroup TM_SSD1306_Typedefs
- * @brief    Library Typedefs
- * @{
- */
 
 /**
  * @brief  SSD1306 color enumeration
@@ -167,17 +50,6 @@ typedef struct {
     void (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
 
 } ssd1306_callback_t;
-
-
-/**
- * @}
- */
-
-/**
- * @defgroup TM_SSD1306_Functions
- * @brief    Library Functions
- * @{
- */
 
 /**
  * @brief  Initializes SSD1306 LCD
@@ -330,23 +202,6 @@ void TM_SSD1306_ScreenClean(void);
 void SSD1306_ON(void);
 void SSD1306_OFF(void);
 
-/**
- * @}
- */
- 
-/**
- * @}
- */
- 
-/**
- * @}
- */
-
 #endif /*USE_OLED_DRIVER_SSD1306*/
 
-/* C++ detection */
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* TM_SSD1306_H */

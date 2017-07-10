@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_GPS_PASSER.h"
 
 #ifdef USE_GPS_PASSER

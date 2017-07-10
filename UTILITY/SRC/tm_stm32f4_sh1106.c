@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "tm_stm32f4_SH1106.h"
 
 #ifdef USE_OLED_DRIVER_SH1106

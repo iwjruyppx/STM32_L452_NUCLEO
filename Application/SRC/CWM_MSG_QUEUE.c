@@ -1,4 +1,7 @@
 
+/*Standard Utility include file*/
+#include "CWM_UTILITY.h"
+
 #include "CWM_MSG_QUEUE.h"
 
 #define CMD_QUEUE_SIZE 16

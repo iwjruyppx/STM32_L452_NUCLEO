@@ -1,20 +1,16 @@
 
-#include "CWM_TASK2.h"
-
 /*Standard Utility include file*/
 #include "CWM_UTILITY.h"
+
 /*Standard Hardware include file*/
 #include "CWM_PERIPHERAL_L452.h"
 
-#define Task_Name "CWMTask2"
-
-#if 0
-extern ModuleHc06Class_t BLE_HC06S;
-BLE_HC06S.setCmd(&BLE_HC06S,CMD_HC06_SET_BAUD_230400, NULL);
-
-#endif
+#include "CWM_TASK2.h"
 
 #include "CWM_MSG_QUEUE.h"
+
+#define Task_Name "CWMTask2"
+
 
 extern int64_t gTimestamp;
 
