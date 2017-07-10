@@ -4,11 +4,6 @@
 
 #ifdef USE_OLED_DRIVER_SSD1306
 
-#include "tm_stm32f4_fonts.h"
-
-#include "stdlib.h"
-#include "string.h"
-
 /* I2C address */
 #ifndef SSD1306_I2C_ADDR
 #define SSD1306_I2C_ADDR         0x78
