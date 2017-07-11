@@ -102,8 +102,12 @@ int CWM_SCREEN_INIT(void)
 
 #ifdef USE_OLED_DRIVER_SH1106
     /*SetUp peripheral interface*/
-    screen_cb_funcs.cbfunc_SingleRegWrite= CWM_I2CMASTER_DMA_WRITE_REG_SINGLE;
-    screen_cb_funcs.cbfunc_RegWrite = CWM_I2CMASTER_DMA_WRITE_REG;
+    pI2cClass_t i2cHandle = CWM_GET_I2C_HANDLE(CWM_I2C1);
+    if(NULL != i2cHandle)
+    {
+        screen_cb_funcs.cbfunc_SingleRegWrite= i2cHandle->singleRegWrite;
+        screen_cb_funcs.cbfunc_RegWrite = i2cHandle->Write;
+    }
 
     /*Event listen register*/
     CWM_MSG_QUEUE_REGISTERED(CWM_CMD_SCREEN_INIT, NULL, evtcb_CWM_CMD_SCREEN_INIT);

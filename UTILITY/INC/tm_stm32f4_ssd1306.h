@@ -35,14 +35,14 @@ typedef struct {
      * Input: 
      *          uint16_t DevAddress, uint8_t Reg, uint8_t sData
      */
-    void (*cbfunc_SingleRegWrite)(uint16_t, uint8_t, uint8_t);
+    int (*cbfunc_SingleRegWrite)(uint16_t, uint8_t, uint8_t);
     
     /**
      * I2c reg write.
      * Input: 
      *          uint16_t DevAddress, uint8_t Reg, uint8_t *pData, uint16_t Size
      */
-    void (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
+    int (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
 
 } ssd1306_callback_t;
 

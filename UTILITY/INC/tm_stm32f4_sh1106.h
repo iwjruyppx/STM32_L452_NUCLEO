@@ -71,10 +71,8 @@ typedef enum {
 } SH1106_COLOR_t;
     
 typedef struct {
-    void (*cbfunc_SingleRegWrite)(uint16_t, uint8_t, uint8_t);
-    
-    void (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
-
+    int (*cbfunc_SingleRegWrite)(uint16_t, uint8_t, uint8_t);
+    int (*cbfunc_RegWrite)(uint16_t, uint8_t, uint8_t *, uint16_t);
 } SH1106_callback_t;
 
 uint8_t TM_SH1106_Init(SH1106_callback_t *cb_funcs);
