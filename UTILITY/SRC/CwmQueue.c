@@ -83,7 +83,7 @@ int CwmQueueGetUseSizeFromISR(pCwmQueue_t ptr)
 int CwmQueueSendToBack(pCwmQueue_t ptr,void *data)
 {
 	if(ptr == NULL)
-		return CwmQueueError;
+		return CWM_ERROR;
 
 	IRQ_DISABLE();
 
@@ -91,33 +91,33 @@ int CwmQueueSendToBack(pCwmQueue_t ptr,void *data)
 	{
 		IRQ_ENABLE();
 
-		return CwmQueueFull;
+		return CWM_ERROR_QUEUE_FULL;
 	}
 	memcpy(&ptr->mem[ptr->front*ptr->ItemSize],data,ptr->ItemSize);
 	ptr->front = (ptr->front+1)%ptr->Length;
 	IRQ_ENABLE();
 
-	return CwmQueueSuccess;
+	return CWM_NON;
 }
 
 int CwmQueueSendToBackFromISR(pCwmQueue_t ptr,void *data)
 {
 	if(ptr == NULL)
-		return CwmQueueError;
+		return CWM_ERROR;
 
 	if(CwmQueueGetEmptySizeFromISR(ptr) ==0)
-        return CwmQueueFull;
+        return CWM_ERROR_QUEUE_FULL;
 
 	memcpy(&ptr->mem[ptr->front*ptr->ItemSize],data,ptr->ItemSize);
 	ptr->front = (ptr->front+1)%ptr->Length;
 
-	return CwmQueueSuccess;
+	return CWM_NON;
 }
 
 int CwmQueueReceive(pCwmQueue_t ptr,void *data)
 {
 	if(ptr == NULL)
-		return CwmQueueError;
+		return CWM_ERROR;
 
 	IRQ_DISABLE();
 
@@ -125,38 +125,38 @@ int CwmQueueReceive(pCwmQueue_t ptr,void *data)
 	{
 		IRQ_ENABLE();
 
-		return CwmQueueEmpty;
+		return CWM_ERROR_QUEUE_EMPTY;
 	}
 	memcpy(data,&ptr->mem[ptr->rear*ptr->ItemSize],ptr->ItemSize);
 	ptr->rear = (ptr->rear+1)%ptr->Length;
 	IRQ_ENABLE();
 
-	return CwmQueueSuccess;
+	return CWM_NON;
 }
 
 int CwmQueueReceiveFromISR(pCwmQueue_t ptr,void *data)
 {
 	if(ptr == NULL)
-		return CwmQueueError;
+		return CWM_ERROR;
 
 	if(CwmQueueGetUseSizeFromISR(ptr) ==0)
-		return CwmQueueEmpty;
+		return CWM_ERROR_QUEUE_EMPTY;
     
 	memcpy(data,&ptr->mem[ptr->rear*ptr->ItemSize],ptr->ItemSize);
 	ptr->rear = (ptr->rear+1)%ptr->Length;
 
-	return CwmQueueSuccess;
+	return CWM_NON;
 }
 
 int CwmQueueReset(pCwmQueue_t ptr)
 {
 	if(ptr == NULL)
-		return CwmQueueError;
+		return CWM_ERROR;
 
 	ptr->front = 0;
 	ptr->rear = 0;
 
-	return CwmQueueSuccess;
+	return CWM_NON;
 }
 
 #endif /*USE_CWM_QUEUE*/

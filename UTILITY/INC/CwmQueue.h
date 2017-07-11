@@ -11,11 +11,6 @@ volatile int rear;
     uint8_t *mem;
 }CwmQueue_t, *pCwmQueue_t;
 
-#define CwmQueueError -3
-#define CwmQueueFull -2
-#define CwmQueueEmpty -1
-#define CwmQueueSuccess 0
-
 int CwmQueueGetEmptySize(pCwmQueue_t ptr);
 int CwmQueueGetEmptySizeFromISR(pCwmQueue_t ptr);
 int CwmQueueGetUseSize(pCwmQueue_t ptr);
