@@ -7,7 +7,7 @@
 #ifdef USE_CWM_PACKAGE_QUEUE
 
 /*Header[0]:count*/
-#define PACKAGE_HEADER_SIZE    1
+#define PACKAGE_HEADER_SIZE    2
 
 static int GetEmptySize(pPackageQueue_t ptr)
 {
@@ -51,13 +51,16 @@ static int PACKAGE_QUEUE_INIT(pPackageQueue_t mem, int size)
 }
 
 /*data format: byte[0] = count, byte[1~1+count] = data*/
-static int PACKAGE_QUEUE_SET(pPackageQueue_t mem, uint8_t *data, int size)
+static int PACKAGE_QUEUE_SET(pPackageQueue_t mem, uint8_t *data, uint16_t size)
 {
     int i;
     if(GetEmptySize(mem) <= (size + PACKAGE_HEADER_SIZE))
         return CWM_ERROR_QUEUE_FULL;
 
-    mem->mem[mem->front] = size;
+    mem->mem[mem->front] = (uint8_t)size;
+    mem->front = (mem->front+1)%mem->Length;
+    
+    mem->mem[mem->front] = (uint8_t)(size >> 8);
     mem->front = (mem->front+1)%mem->Length;
         
     for(i =0;i<size;i++ )
@@ -74,14 +77,18 @@ static int PACKAGE_QUEUE_GET(pPackageQueue_t mem, uint8_t *data)
     int i;
     int size;
     int count;
+    uint16_t temp = 0;
     size = GetUseSize(mem);
     if(0 == size)
         return CWM_NON;
     
     /*Read first byte to get this package size*/
-    count = mem->mem[mem->rear];
+    temp = (uint16_t)mem->mem[mem->rear];
+    mem->rear = (mem->rear+1)%mem->Length;
+    temp |= ((uint16_t)mem->mem[mem->rear]) << 8;
     mem->rear = (mem->rear+1)%mem->Length;
     
+    count = (int)temp;
     for(i =0;i<count;i++ )
     {
         data[i] = mem->mem[mem->rear];

@@ -24,7 +24,7 @@ typedef struct {
         input[2]: size
         return: Error message.
     */
-    int (*set)(pPackageQueue_t, uint8_t *, int);
+    int (*set)(pPackageQueue_t, uint8_t *, uint16_t);
     /*
         input[0]: pPackageQueue_t 
         output[0]: data 
