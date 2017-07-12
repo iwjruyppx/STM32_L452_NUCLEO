@@ -14,6 +14,10 @@ typedef struct {
     void (*deInit)(void);
     void (*mspInit)(I2C_HandleTypeDef *);
     void (*mspDeInit)(I2C_HandleTypeDef *);
+    
+    /*Irq callBack*/
+    void (*TxCpltCallback)(I2C_HandleTypeDef *);
+    void (*ErrorCallback)(I2C_HandleTypeDef *);
 
     int (*Write)(uint16_t, uint8_t, uint8_t *, uint16_t);
     int (*Read)(uint16_t, uint8_t, uint8_t *, uint16_t);
