@@ -4,7 +4,7 @@
 
 #include "CWM_MSG_QUEUE.h"
 
-#define CMD_QUEUE_SIZE 16
+#define CMD_QUEUE_SIZE 32
 static osMessageQId CWM_MSG_QUEUE;
 
 LinkListHandle_t MsgHandle;

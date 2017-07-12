@@ -14,7 +14,6 @@
 #include "CWM_TASK2.h"
 #include "CWM_GPS.h"
 #include "CWM_SCREEN.h"
-#include "CWM_MSG_QUEUE.h"
 
 int64_t gTimestamp = 0ll;
 /*
@@ -50,6 +49,7 @@ static void PLATFORM_INIT(void)
     CWM_I2C_INIT();
 
     CWM_SCREEN_INIT();
+    
     CWM_GPS_INIT();
     
   
@@ -157,7 +157,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
   RCC_OscInitStruct.PLL.PLLN = 40;
-  RCC_OscInitStruct.PLL.PLLR = 8;
+  RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLP = 7;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)

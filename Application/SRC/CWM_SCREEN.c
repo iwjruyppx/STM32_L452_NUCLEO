@@ -8,7 +8,6 @@
 
 #include "CWM_SCREEN.h"
 
-#include "CWM_MSG_QUEUE.h"
 
 #ifdef USE_OLED_DRIVER_SSD1306
 

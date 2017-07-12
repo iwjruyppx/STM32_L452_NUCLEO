@@ -7,10 +7,9 @@
 
 #include "CWM_TASK2.h"
 
-#include "CWM_MSG_QUEUE.h"
-
 #define Task_Name "CWMTask2"
 
+#include "CWM_GPS.h"
 
 extern int64_t gTimestamp;
 
@@ -35,6 +34,7 @@ static void Task2(const void *argument)
     for (;;)
     {
         osDelay(1000);
+        showGpsInfo();
     }
 }
 

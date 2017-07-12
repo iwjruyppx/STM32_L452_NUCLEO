@@ -14,4 +14,6 @@ typedef struct {
 #endif/*USE_GPS*/
 void CWM_GPS_INIT(void);
 
+void showGpsInfo(void);
+
 #endif /* __CWM_GPS_H */

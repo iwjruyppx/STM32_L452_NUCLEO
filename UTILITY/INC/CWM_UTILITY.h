@@ -33,6 +33,9 @@
 #include "CWM_STRUCTURE.h"
 #include "CWM_ERROR_CODE.h"
 #include "CWM_INTERNAL_CMD.h"
+
+/*system periphreal message control center*/
+#include "CWM_MSG_QUEUE.h"
 /*********************************************************/
 /************//*Standard UTILITY/STRUCTURE/ERROR CODE */
 /*********************************************************/
@@ -48,6 +51,8 @@
 #include "CWM_LOG_STRING_PASER_TEMPLATE.h"
 /*Circular Queue*/
 #include "CwmQueue.h"
+/*Package Queue*/
+#include "CWM_PACKAGE_QUEUE.h"
 
 /*Screen fonts*/
 #include "tm_stm32f4_fonts.h"

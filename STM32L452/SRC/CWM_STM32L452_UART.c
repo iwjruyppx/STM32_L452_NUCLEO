@@ -10,7 +10,6 @@
 #include "CWM_STM32L452_USART3.h"
 
 #include "CWM_UART_QUEUE.h"
-#include "CWM_MSG_QUEUE.h"
 
 #ifdef USE_UART
 /* Size of Reception buffer */

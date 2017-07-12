@@ -7,7 +7,6 @@
 
 #include "CWM_TASK1.h"
 
-#include "CWM_MSG_QUEUE.h"
 #include "CWM_FACTORY_CMD_PASSER.h"
 
 #define Task_Name "CWMTask1"

@@ -7,7 +7,6 @@
 
 #include "CWM_GPS.h"
 
-#include "CWM_MSG_QUEUE.h"
 #include "CWM_UART_QUEUE.h"
 
 #ifdef USE_GPS
@@ -45,13 +44,17 @@ static void GPS_GSV_LISTEN(gps_gsv_t *p)
 static void GPS_RMC_LISTEN(gps_rmc_t *p)
 {
     memcpy(&GPS_INFO.rmc, p, sizeof(gps_rmc_t));
-    
+}
+
+void showGpsInfo(void)
+{
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_CLEAN);
+    #if 1
     LOGE("T:%d:%d:%d,%X\n",GPS_INFO.rmc.hour,GPS_INFO.rmc.min,GPS_INFO.rmc.sec,GPS_INFO.rmc.status);
     LOGE("NL:%s\n",doubleToString(GPS_INFO.rmc.nl));
     LOGE("EL:%s\n",doubleToString(GPS_INFO.rmc.el));
+    #endif
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_UPDATE);
-    
 }
 
 static void evtcb_CWM_CMD_UART_LISTEN_RX_UPDATE(void *handle, void *evtData)

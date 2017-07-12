@@ -3,7 +3,6 @@
 #include "CWM_UTILITY.h"
 
 #include "CWM_INTERNAL_CMD.h"
-#include "CWM_MSG_QUEUE.h"
 
 int CWM_INTERNAL_CMD(void)
 {
