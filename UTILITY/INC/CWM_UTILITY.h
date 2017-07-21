@@ -64,6 +64,8 @@
 #include "MODULE_BT_HC_06_SLAVE.h"
 /*GPS Module*/
 #include "CWM_GPS_PASSER.h"
+/*StepperMotor Module*/
+#include "CWM_STEPPER_MOTOR.h"
 /*********************************************************/
 /************//*MODULE END*/
 /*********************************************************/
