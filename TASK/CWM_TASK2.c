@@ -110,15 +110,17 @@ static void Task2(const void *argument)
     osDelay(1000);
     for (;;)
     {
-        osDelay(2);
-        STEP_HANDLE.Timer(&STEP_HANDLE);
-        
-        if(loop_count++ >=2048)
+        if(loop_count > 2047)
         {
-            osDelay(5000);
+            osDelay(1000);
             loop_count = 0;
-        //    showGpsInfo();
+#if 1
+            showGpsInfo();
+#endif
         }
+        STEP_HANDLE.Timer(&STEP_HANDLE);
+        loop_count++;
+        osDelay(2);
     }
 }
 
