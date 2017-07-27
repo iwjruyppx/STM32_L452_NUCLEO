@@ -14,4 +14,6 @@
 
 #define CWM_NON 0
 
+#define CWM_SUCCESS 1
+
 #endif /* __CWM_ERROR_CODE_H */

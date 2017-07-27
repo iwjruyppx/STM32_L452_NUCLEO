@@ -14,6 +14,8 @@
 #include "CWM_TASK2.h"
 #include "CWM_GPS.h"
 #include "CWM_SCREEN.h"
+    
+#include "CWM_STEPPER_MOTOR_PROC.h"
 
 int64_t gTimestamp = 0ll;
 /*
@@ -51,6 +53,8 @@ static void PLATFORM_INIT(void)
     CWM_SCREEN_INIT();
     
     CWM_GPS_INIT();
+    
+    STEPPER_MOTOR_INIT();
     
   
 }
