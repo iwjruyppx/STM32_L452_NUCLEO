@@ -40,13 +40,6 @@ typedef enum {
 }CWM_PWM_STATES_e;
 
 typedef struct {    
-    CWM_PWM_STATES_e mode;
-    double stepDegrees;
-    int minDelay;
-    int maxDelay;
-} StepperMotorInfo_t, *pStepperMotorInfo_t;
-
-typedef struct {    
     CWM_PWM_STATES_e state;
     int maxSpeed;
     union{
@@ -59,12 +52,14 @@ typedef struct {
     };
 } StepperMotorCtrl_t, *pStepperMotorCtrl_t;
 
-typedef struct StepperMotorH_t{
-    StepperMotorInfo_t info;
-    StepperMotorCtrl_t ctrlInfo;
-    int stateMachine;
-    int currentDelay;
-    double degrees;
+typedef struct {    
+    CWM_PWM_STATES_e mode;
+    double stepDegrees;
+    int minDelay;
+    int maxDelay;
+} SteppMotorInfo_t, *pSteppMotorInfo_t;
+
+typedef struct StepperMotorH_t {
     void (*GPIO_1)(CWM_PWM_STATES_e);
     void (*GPIO_2)(CWM_PWM_STATES_e);
     void (*GPIO_3)(CWM_PWM_STATES_e);
@@ -73,8 +68,13 @@ typedef struct StepperMotorH_t{
     int (*Control)(struct StepperMotorH_t *, pStepperMotorCtrl_t);
     int (*Timer)(struct StepperMotorH_t *);
     int (*FinishCallBack)(struct StepperMotorH_t *);
+    SteppMotorInfo_t spInfo;
+    StepperMotorCtrl_t ctrlInfo;
+    int stateMachine;
+    double currentDelay;
+    double degrees;
 } StepperMotorHandle_t, *pStepperMotorHandle_t;
 
-void CWM_STEPPER_MOTOR_INIT(pStepperMotorHandle_t handle, pStepperMotorInfo_t info);
+void CWM_STEPPER_MOTOR_INIT(pStepperMotorHandle_t handle, pSteppMotorInfo_t info);
 
 #endif /* __CWM_STEPPER_MOTOR_H */

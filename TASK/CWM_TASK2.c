@@ -14,6 +14,19 @@
 
 extern int64_t gTimestamp;
 
+static void evtcb_BT_CMD(void *handle, void *evtData)
+{
+    pCWM_CMD_t data = (pCWM_CMD_t)evtData;
+    int degree = 0;
+
+    if(CWM_STRING_COMPARE(data->string, "SM_RotateRight:") >= 0)
+    {
+        sscanf(data->string, "SM_RotateRight:%d",&degree);
+        SetDegrees(degree);
+    }
+}
+
+
 static void Task2Start(void)
 {
     /*Enable Usart3 RX listen*/
@@ -25,6 +38,8 @@ static void Task2Start(void)
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_INIT);
     CWM_INTERNAL_CMD_SET(CWM_CMD_SCREEN_ON);
 
+    /*Register CWM_CMD_USART3_RX_UPDATE event callback*/
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_USART3_RX_UPDATE, NULL, evtcb_BT_CMD);
 }
 
 static void Task2(const void *argument)
@@ -38,7 +53,7 @@ static void Task2(const void *argument)
         if(tempTime < gTimestamp)
         {
             tempTime = gTimestamp+100;
-            ShowCurrneDegrees();
+//            ShowCurrneDegrees();
         }
     }
 }

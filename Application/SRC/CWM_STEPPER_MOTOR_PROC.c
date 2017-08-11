@@ -101,13 +101,17 @@ void STEPPER_MOTOR_PROC(void)
     CWM_SM.handle.Timer(&CWM_SM.handle);
 }
 
-static int STEPPER_MOTOR_CALLBACK(struct StepperMotorH_t * handle)
+void SetDegrees(int degrees)
 {
-#if 1
     StepperMotorCtrl_t cmd;    
     cmd.state = PWM_STATES_START_DEGREES;
-    cmd.Degrees = 360*10;
+    cmd.Degrees = degrees;
     CWM_SM.handle.Control(&CWM_SM.handle, &cmd);
+}
+static int STEPPER_MOTOR_CALLBACK(struct StepperMotorH_t * handle)
+{
+#if 0
+    SetDegrees(360*10);
 #endif
     return CWM_NON;
 }
@@ -123,8 +127,7 @@ void STEPPER_MOTOR_INIT(void)
 {
     
     GPIO_InitTypeDef  GPIO_InitStruct;
-    StepperMotorInfo_t info;
-    StepperMotorCtrl_t cmd;
+    SteppMotorInfo_t info;
 
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -150,20 +153,18 @@ void STEPPER_MOTOR_INIT(void)
     CWM_SM.handle.FinishCallBack= STEPPER_MOTOR_CALLBACK;
     
     info.mode = PWM_MODE_HIGH_TORQUE;
-    info.stepDegrees = 0.17578125f;
+//    info.stepDegrees = 0.17578125f;
+    info.stepDegrees = 1.8f;
 #ifdef USER_TIMER3
     info.minDelay = 13;
     info.maxDelay = 20;
 #else
-    info.minDelay = 2;
-    info.maxDelay = 8;
+    info.minDelay = 8;
+    info.maxDelay = 50;
 #endif
     CWM_STEPPER_MOTOR_INIT(&CWM_SM.handle, &info);
 
-    cmd.state = PWM_STATES_START_DEGREES;
-    cmd.Degrees = 360*10;
-    CWM_SM.handle.Control(&CWM_SM.handle, &cmd);
-
+    SetDegrees(3600);
 
 #ifdef USER_TIMER3
     /*Timer3 get entry and register callback*/
