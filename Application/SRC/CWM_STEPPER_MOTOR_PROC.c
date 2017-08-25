@@ -14,6 +14,7 @@
 typedef struct {
     StepperMotorHandle_t handle;
     pTimerClass_t tim;
+    int64_t buttonPushTime;
 }CWM_STEP_MOTOR_CONTROL_t;
 static CWM_STEP_MOTOR_CONTROL_t CWM_SM;
 
@@ -105,6 +106,13 @@ void SetDegrees(int degrees)
 {
     StepperMotorCtrl_t cmd;    
     cmd.state = PWM_STATES_START_DEGREES;
+    if(degrees >= 0 )
+    {
+        cmd.rotate = PWM_ROTATE_POSITIVE;
+    }else{
+        cmd.rotate = PWM_ROTATE_NEGATIVE;
+        degrees *= -1;
+    }
     cmd.Degrees = degrees;
     CWM_SM.handle.Control(&CWM_SM.handle, &cmd);
 }
@@ -122,6 +130,33 @@ static void CWM_TIME3_IRQ_CALLBACK(void *info)
     CWM_SM.handle.Timer(&CWM_SM.handle);
 }
 #endif
+
+static void evtcb_CWM_CMD_GPIO_RISING(void *handle, void *evtData)
+{
+    pCWM_CMD_t data = (pCWM_CMD_t)evtData;
+
+    if(data->type == USER_BUTTON_PIN)
+    {
+        if(CWM_SM.buttonPushTime != 0)
+        {
+            if((gTimestamp - CWM_SM.buttonPushTime) > 1000)
+                SetDegrees(-3600);
+            else
+                SetDegrees(3600);
+        }
+        CWM_SM.buttonPushTime = 0;
+    }
+}
+
+static void evtcb_CWM_CMD_GPIO_FALLING(void *handle, void *evtData)
+{
+    pCWM_CMD_t data = (pCWM_CMD_t)evtData;
+
+    if(data->type == USER_BUTTON_PIN)
+    {
+        CWM_SM.buttonPushTime = gTimestamp;
+    }
+}
 
 void STEPPER_MOTOR_INIT(void)
 {
@@ -164,7 +199,7 @@ void STEPPER_MOTOR_INIT(void)
 #endif
     CWM_STEPPER_MOTOR_INIT(&CWM_SM.handle, &info);
 
-    SetDegrees(3600);
+//    SetDegrees(3600);
 
 #ifdef USER_TIMER3
     /*Timer3 get entry and register callback*/
@@ -178,5 +213,7 @@ void STEPPER_MOTOR_INIT(void)
     CWM_SM.tim->resetCount();
     CWM_SM.tim->start();
 #endif
-
+    CWM_SM.buttonPushTime = 0;
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_GPIO_RISING, NULL, evtcb_CWM_CMD_GPIO_RISING);
+    CWM_MSG_QUEUE_REGISTERED(CWM_CMD_GPIO_FALLING, NULL, evtcb_CWM_CMD_GPIO_FALLING);
 }

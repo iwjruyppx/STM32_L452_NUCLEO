@@ -11,27 +11,6 @@
 #define SPCURDELAY handle->currentDelay
 #define SPCURDEG handle->degrees
 
-#if 0 
-static double SM_DecelCurve(struct StepperMotorH_t * handle, pAccDecelCurveInfo_t curveInfo)
-{
-
-    int SpPercent = 0;
-    int i;
-    SpPercent = 100 - (int)GetPercent(0, CONTROL_DEGREE, SPCURDEG);
-    
-    if(SpPercent > SP_Percent0 && SpPercent <= SP_Percent1){
-        return (PercentCV(PercentCV(curveInfo->min, curveInfo->max, SP_RANGE0), PercentCV(curveInfo->min, curveInfo->max, SP_RANGE1), GetPercent(SP_Percent0,SP_Percent1,SpPercent)));
-    }else if(SpPercent > SP_Percent1 && SpPercent <= SP_Percent2){
-        return (PercentCV(PercentCV(curveInfo->min, curveInfo->max, SP_RANGE1), PercentCV(curveInfo->min, curveInfo->max, SP_RANGE2), GetPercent(SP_Percent1,SP_Percent2,SpPercent)));
-    }else if(SpPercent > SP_Percent2 && SpPercent <= SP_Percent3){
-        return (PercentCV(PercentCV(curveInfo->min, curveInfo->max, SP_RANGE2), PercentCV(curveInfo->min, curveInfo->max, SP_RANGE3), GetPercent(SP_Percent2,SP_Percent3,SpPercent)));
-    }else if(SpPercent > SP_Percent3 && SpPercent <= SP_Percent4){
-        return  ( PercentCV(PercentCV(curveInfo->min, curveInfo->max, SP_RANGE3), PercentCV(curveInfo->min, curveInfo->max, SP_RANGE4), GetPercent(SP_Percent3,SP_Percent4,SpPercent)));
-    }
-    return 0;
-}
-#endif
-
 static void SM_LLHH(struct StepperMotorH_t * handle)
 {
     handle->GPIO_1(PWM_STATES_LOW);
@@ -123,8 +102,7 @@ static void SM_STATE_MACHINE_NORMAL(struct StepperMotorH_t * handle)
 
 static void SM_STATE_MACHINE_HIGH_TORQUE(struct StepperMotorH_t * handle)
 {
-    switch(handle->stateMachine++)
-
+    switch(handle->stateMachine)
     {
         case 0:
             SM_LLHH(handle);
@@ -142,8 +120,19 @@ static void SM_STATE_MACHINE_HIGH_TORQUE(struct StepperMotorH_t * handle)
             handle->stateMachine = 0;
             break;
     }
+    
+    if(handle->ctrlInfo.rotate == PWM_ROTATE_POSITIVE)
+    {
+        handle->stateMachine++;
+    }else{
+        handle->stateMachine--;
+    }
+        
     if(handle->stateMachine > 3)
         handle->stateMachine = 0;
+    if(handle->stateMachine < 0)
+        handle->stateMachine = 3;
+    
     /*1 step = 0.17578125 degrees*/
     handle->degrees += handle->spInfo.stepDegrees;
 }
@@ -175,9 +164,9 @@ static int SM_MotionControl(struct StepperMotorH_t * handle)
 {
     if(handle->ctrlInfo.state == PWM_STATES_START_DEGREES)
     {
-        if(handle->degrees >= handle->ctrlInfo.Degrees)
+        if(handle->degrees >= (handle->ctrlInfo.Degrees - handle->spInfo.stepDegrees))
         {
-            handle->ctrlInfo.state = PWM_STATES_STOP;
+            handle->ctrlInfo.state = PWM_STATES_PRESTOP;
             if(NULL != handle->FinishCallBack)
                 handle->FinishCallBack(handle);
             
@@ -192,18 +181,30 @@ static int SM_MotionControl(struct StepperMotorH_t * handle)
 static int STEPPER_MOTOR_TIMER(struct StepperMotorH_t * handle)
 {
     int rty;
-    if(handle->ctrlInfo.state == PWM_STATES_STOP)
+    if(handle->ctrlInfo.state == PWM_STATES_PRESTOP)
+    {
+        if(handle->timeout >= 3000)
+        {
+            handle->ctrlInfo.state = PWM_STATES_STOP;
+            handle->timeout = 0;
+        }
+        handle->timeout += handle->currentDelay;
+        handle->DELAY((int)handle->currentDelay);
         return CWM_NON;
+    }else if(handle->ctrlInfo.state == PWM_STATES_STOP)
+    {
+        return CWM_NON;
+    }
 
-    rty = SM_MotionControl(handle);
-    if(rty)
-        return rty;
-    
     if(handle->spInfo.mode == PWM_MODE_NORMAL)
         SM_STATE_MACHINE_NORMAL(handle);
     
     if(handle->spInfo.mode == PWM_MODE_HIGH_TORQUE)
         SM_STATE_MACHINE_HIGH_TORQUE(handle);
+    
+    rty = SM_MotionControl(handle);
+    if(rty)
+        return rty;
 
 
     return CWM_NON;
@@ -224,6 +225,7 @@ void CWM_STEPPER_MOTOR_INIT(pStepperMotorHandle_t handle, pSteppMotorInfo_t info
     handle->Timer= STEPPER_MOTOR_TIMER;
     handle->ctrlInfo.state = PWM_STATES_STOP;
     handle->stateMachine= 0;
+    handle->timeout= 0;
     
     memcpy(&handle->spInfo, info, sizeof(SteppMotorInfo_t));
 }

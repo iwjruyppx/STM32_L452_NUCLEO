@@ -31,17 +31,24 @@ typedef enum {
     /*Control*/
     PWM_STATES_START_STEP,
     PWM_STATES_START_DEGREES,
+    PWM_STATES_PRESTOP,
     PWM_STATES_STOP,
 
     /*Stepper motor mode*/
     PWM_MODE_NORMAL,
     PWM_MODE_HIGH_TORQUE,
+    PWM_MODE_HIGH_TORQUE_ROTATION,
+
+    /*Rotate*/
+    PWM_ROTATE_POSITIVE,
+    PWM_ROTATE_NEGATIVE,
     
 }CWM_PWM_STATES_e;
 
 typedef struct {    
     CWM_PWM_STATES_e state;
     int maxSpeed;
+    int rotate;
     union{
         struct{
             int timeMs;
@@ -73,6 +80,7 @@ typedef struct StepperMotorH_t {
     int stateMachine;
     double currentDelay;
     double degrees;
+    int timeout;
 } StepperMotorHandle_t, *pStepperMotorHandle_t;
 
 void CWM_STEPPER_MOTOR_INIT(pStepperMotorHandle_t handle, pSteppMotorInfo_t info);
