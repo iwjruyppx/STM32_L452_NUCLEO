@@ -10,5 +10,6 @@
 #include "CWM_STM32L452_I2C.h"
 #include "CWM_STM32L452_TIMER.h"
 #include "CWM_STM32L452_UART.h"
+#include "CWM_STM32L452_GPIO.h"
 
 #endif /* __CWM_PERIPHERAL_L452_H */

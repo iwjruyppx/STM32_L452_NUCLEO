@@ -69,30 +69,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
   *         you can add your own implementation.
   * @retval None
   */
-  
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    CWM_CMD_t data;
-    
-#ifdef USE_UART4_PA0_PA1
-    if(huart->Instance == UART4)
-    {
-        /* Set transmission flag: trasfer complete*/
-        if(CWM_U4.status)
-        {
-            CWM_U4.errCode = 0;
-            
-            CWM_UART_QUEUE_SET(&CWM_U4.rxQueue, CWM_U4.RxBuffer, CWM_U4.size);
-            if(NULL != CWM_U4.uart)
-                CWM_U4.uart->read(CWM_U4.RxBuffer, CWM_U4.size);
-            
-            data.cmd = CWM_CMD_UART4_RX_UPDATE;
-            CWM_MSG_QUEUE_SEND(&data);
-        }
-    }
-#endif /*USE_UART4_PA0_PA1*/
-
+static void HAL_USART3_RxCpltCallback(UART_HandleTypeDef *huart)
+{    
 #ifdef USE_USART3_PB4_PB5
+    CWM_CMD_t data;
     if(huart->Instance == USART3)
     {
         if(CWM_U3.time_en)
@@ -117,6 +97,35 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         }
     }
 #endif /*USE_USART3_PB4_PB5*/
+}
+
+static void HAL_UART4_RxCpltCallback(UART_HandleTypeDef *huart)
+{    
+#ifdef USE_UART4_PA0_PA1
+    CWM_CMD_t data;
+    
+    if(huart->Instance == UART4)
+    {
+        /* Set transmission flag: trasfer complete*/
+        if(CWM_U4.status)
+        {
+            CWM_U4.errCode = 0;
+            
+            CWM_UART_QUEUE_SET(&CWM_U4.rxQueue, CWM_U4.RxBuffer, CWM_U4.size);
+            if(NULL != CWM_U4.uart)
+                CWM_U4.uart->read(CWM_U4.RxBuffer, CWM_U4.size);
+            
+            data.cmd = CWM_CMD_UART4_RX_UPDATE;
+            CWM_MSG_QUEUE_SEND(&data);
+        }
+    }
+#endif /*USE_UART4_PA0_PA1*/
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    HAL_USART3_RxCpltCallback(huart);
+    HAL_UART4_RxCpltCallback(huart);
 }
 
 void HAL_UART_RxCpltEntryCallback(UART_HandleTypeDef *huart)
@@ -228,10 +237,26 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 #endif /*USE_USART3_PB4_PB5*/
 }
 
-static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
+static void evtcb_CWM_CMD_USART3_LISTEN(void *handle, void *evtData)
 {
+#ifdef USE_USART3_PB4_PB5
     pCWM_CMD_t cmd = (pCWM_CMD_t)evtData;
+    if(CWM_USART3 == cmd->type)
+    {
+        if(CWM_U3.status == 0)
+        {
+            CWM_U3.status = 1;
+            if(NULL != CWM_U3.uart)
+                CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
+        }
+    }
+#endif /*USE_USART3_PB4_PB5*/
+}
+
+static void evtcb_CWM_CMD_UART4_LISTEN(void *handle, void *evtData)
+{
 #ifdef USE_UART4_PA0_PA1
+    pCWM_CMD_t cmd = (pCWM_CMD_t)evtData;
     if(CWM_UART4 == cmd->type)
     {
         if(CWM_U4.status == 0)
@@ -244,17 +269,12 @@ static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
     }
 #endif /*USE_UART4_PA0_PA1*/
 
-#ifdef USE_USART3_PB4_PB5
-    if(CWM_USART3 == cmd->type)
-    {
-        if(CWM_U3.status == 0)
-        {
-            CWM_U3.status = 1;
-            if(NULL != CWM_U3.uart)
-                CWM_U3.uart->read(CWM_U3.RxBuffer, MAX_CWM_CMD_DATA_SIZE-3);
-        }
-    }
-#endif /*USE_USART3_PB4_PB5*/
+}
+
+static void evtcb_CWM_CMD_USART_LISTEN(void *handle, void *evtData)
+{
+    evtcb_CWM_CMD_USART3_LISTEN(handle, evtData);
+    evtcb_CWM_CMD_UART4_LISTEN(handle, evtData);
 }
 
 static void CWM_UART_EVENT_REGISTER(void)

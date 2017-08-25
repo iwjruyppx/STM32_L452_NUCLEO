@@ -105,7 +105,6 @@ static int CWM_LINK_LIST_SEARCH_AND_CALLBACK(pLinkListHandle_t Handle, uint32_t 
                 return CWM_ERROR_NULL_POINT;
             
             ptr->pLinkLiskdata->evtCbfunc(ptr->pLinkLiskdata, data);
-            return CWM_NON;
         }
     }
     

@@ -55,7 +55,8 @@ static void PLATFORM_INIT(void)
     CWM_GPS_INIT();
     
     STEPPER_MOTOR_INIT();
-    
+
+    CWM_BUTTON_INIT();
   
 }
 
